@@ -1,0 +1,2306 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Khảo Thí Online - Phòng Luyện Thi TSA & Các Môn Học</title>
+  <!-- Hiển thị công thức Toán học LaTeX -->
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <!-- Thư viện PDF.js hỗ trợ đọc trực tiếp file PDF sang JSON -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <style>
+    :root {
+      --primary: #0044a9;
+      --primary-dark: #002d72;
+      --cyan-timer: #00a8b5;
+      --bg-main: #f4f6f9;
+      --border: #e2e8f0;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    /* ================= GIAO DIỆN CHUNG (PORTAL) ================= */
+    .portal-header {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--primary);
+      font-weight: 800;
+      font-size: 17px;
+      cursor: pointer;
+    }
+
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #0044a9 50%, #00b4d8 50%);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 18px;
+    }
+
+    .brand-sub {
+      font-size: 10.5px;
+      display: block;
+      color: #00a8b5;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+      margin-top: -3px;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 4px;
+      height: 100%;
+    }
+
+    .nav-tab {
+      border: none;
+      background: transparent;
+      padding: 0 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+    }
+
+    .nav-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .student-info-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .student-info-bar input {
+      border: 1px solid var(--border);
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-weight: 600;
+      color: var(--text-main);
+      width: 175px;
+      font-size: 13px;
+    }
+
+    .portal-container {
+      max-width: 1220px;
+      margin: 22px auto;
+      padding: 0 20px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .section-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: #f1f5f9;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-fast {
+      background: #ecfeff;
+      color: #0e7490;
+      border-color: #a5f3fc;
+    }
+
+    .btn-danger {
+      color: #dc2626;
+      border-color: #fecaca;
+    }
+
+    .sub-filter-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+    }
+
+    .chip {
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .chip.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .grid-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 16px;
+    }
+
+    .card-item {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .card-tag {
+      display: inline-block;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: #eff6ff;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-size: 15.5px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 6px;
+    }
+
+    .card-meta {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    /* ================= GIAO DIỆN PHÒNG THI CBT CHUẨN KHẢO THÍ ONLINE ================= */
+    #examRoomView {
+      display: none;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      background: #f8fafc;
+      flex-direction: column;
+    }
+
+    .cbt-layout {
+      display: flex;
+      flex: 1;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .cbt-main-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .cbt-top-bar {
+      height: 56px;
+      background: #fff;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      border-bottom: 1px solid #edf2f7;
+      flex-shrink: 0;
+    }
+
+    .cbt-exam-title {
+      font-size: 16.5px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .cbt-workspace {
+      flex: 1;
+      padding: 16px 24px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Giao diện 1 cột (Toán học) */
+    .single-col-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+
+    .cbt-single-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+      border: 1px solid #f1f5f9;
+      padding: 24px 28px 32px 28px;
+      max-width: 1040px;
+      min-height: 280px;
+    }
+
+    /* Giao diện 2 cột (Đọc hiểu & Khoa học) */
+    .split-col-card {
+      flex: 1;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+      border: 1px solid #f1f5f9;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+      height: 100%;
+    }
+
+    .split-left-passage {
+      padding: 22px 26px;
+      overflow-y: auto;
+      border-right: 1px solid #edf2f7;
+      font-size: 15px;
+      color: #1e293b;
+      line-height: 1.72;
+    }
+
+    .split-left-passage p {
+      margin-bottom: 12px;
+      text-align: justify;
+    }
+
+    .split-right-questions {
+      padding: 22px 24px;
+      overflow-y: auto;
+    }
+
+    .split-q-block {
+      padding-bottom: 24px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .split-q-block:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .q-header-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .q-number-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #f1f5f9;
+      color: #1e293b;
+      font-weight: 700;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .q-bookmark-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #f1f5f9;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #94a3b8;
+      flex-shrink: 0;
+    }
+
+    .q-bookmark-btn.flagged {
+      background: #fef3c7;
+      color: #d97706;
+    }
+
+    .q-body-content {
+      flex: 1;
+      padding-top: 4px;
+      font-size: 15px;
+      color: #1e293b;
+      line-height: 1.7;
+    }
+
+    /* 5 dạng câu hỏi chuẩn TSA */
+    .mcq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .mcq-item, .msq-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .radio-circle {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #e5e7eb;
+      flex-shrink: 0;
+    }
+
+    .mcq-item.selected .radio-circle {
+      background: var(--primary);
+      box-shadow: inset 0 0 0 5px #e5e7eb;
+    }
+
+    .checkbox-square {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      background: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .msq-item.selected .checkbox-square {
+      background: var(--primary);
+    }
+
+    .tf-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+    }
+
+    .tf-table th {
+      font-weight: 600;
+      color: #334155;
+      padding: 6px 10px;
+      text-align: center;
+      font-size: 13.5px;
+    }
+
+    .tf-table td {
+      border: 1px solid #e2e8f0;
+      padding: 12px 14px;
+      vertical-align: middle;
+    }
+
+    .tf-table td.tf-choice-cell {
+      width: 76px;
+      text-align: center;
+    }
+
+    .tf-radio {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: #e5e7eb;
+      margin: 0 auto;
+      cursor: pointer;
+    }
+
+    .tf-radio.selected {
+      background: var(--primary);
+      box-shadow: inset 0 0 0 5px #e5e7eb;
+    }
+
+    /* Dạng 4: Kéo thả mượt mà (Floating Drag + Click) */
+    .drag-bank-box {
+      border: 1px solid #93c5fd;
+      border-radius: 6px;
+      padding: 10px 12px;
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 10px 0 16px 0;
+      background: #fff;
+    }
+
+    .drag-chip {
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 5px;
+      padding: 5px 13px;
+      font-size: 14px;
+      color: #1e293b;
+      cursor: grab;
+      user-select: none;
+      touch-action: none;
+      display: inline-block;
+    }
+
+    .drag-chip:hover {
+      background: #e2e8f0;
+    }
+
+    .drag-chip.picked {
+      outline: 2px solid var(--primary);
+      background: #dbeafe;
+    }
+
+    .drop-target-slot {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 96px;
+      min-height: 34px;
+      padding: 3px 6px;
+      margin: 3px 4px;
+      border: 1.5px dashed #cbd5e1;
+      border-radius: 6px;
+      vertical-align: middle;
+      background: #fff;
+      cursor: pointer;
+      user-select: none;
+      touch-action: none;
+    }
+
+    .drop-target-slot.drag-hover {
+      border-style: solid;
+      border-color: #f97316;
+      background: #fff7ed;
+    }
+
+    .drop-target-slot.filled {
+      border-style: solid;
+      border-color: #cbd5e1;
+      background: #fff;
+    }
+
+    .slot-inner-chip {
+      background: #f1f5f9;
+      border-radius: 4px;
+      padding: 3px 11px;
+      font-size: 14px;
+      color: #1e293b;
+      pointer-events: none;
+    }
+
+    .floating-drag-ghost {
+      position: fixed;
+      z-index: 9999;
+      pointer-events: none;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 5px;
+      padding: 6px 14px;
+      font-size: 14px;
+      color: #1e293b;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+    }
+
+    /* Dạng 5: Điền đáp án */
+    .fill-blank-inline {
+      border: none;
+      border-bottom: 1.8px solid #3b82f6;
+      width: 90px;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--primary-dark);
+      background: transparent;
+      outline: none;
+      margin: 0 4px;
+      padding: 2px 4px;
+    }
+
+    /* Thanh chân trang phòng thi */
+    .cbt-bottom-bar {
+      height: 62px;
+      background: #fff;
+      border-top: 1px solid #edf2f7;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .bottom-left-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-nav-prev {
+      width: 40px;
+      height: 38px;
+      border-radius: 6px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .btn-nav-next {
+      height: 38px;
+      padding: 0 18px;
+      border-radius: 6px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .btn-nav-prev:disabled, .btn-nav-next:disabled {
+      background: #f1f5f9;
+      color: #cbd5e1;
+      cursor: not-allowed;
+    }
+
+    .bottom-right-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mini-remaining-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 6px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+    }
+
+    .btn-open-menu {
+      height: 40px;
+      padding: 0 18px;
+      border-radius: 6px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    /* Cột phải (Bảng câu hỏi & Nộp bài) */
+    .cbt-right-sidebar {
+      width: 315px;
+      background: #fff;
+      border-left: 1px solid #edf2f7;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 16px 18px;
+      flex-shrink: 0;
+    }
+
+    .cbt-right-sidebar.collapsed {
+      display: none;
+    }
+
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 9px 6px;
+    }
+
+    .palette-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #f1f5f9;
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      margin: 0 auto;
+    }
+
+    .palette-circle.answered {
+      background: #dbeafe;
+      color: var(--primary);
+    }
+
+    .palette-circle.flagged {
+      box-shadow: 0 0 0 2px #f59e0b;
+    }
+
+    .palette-circle.current {
+      background: var(--primary-dark);
+      color: #fff;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.48);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 18px;
+    }
+
+    .modal-box {
+      background: #fff;
+      border-radius: 10px;
+      max-width: 880px;
+      width: 100%;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+    }
+
+    .modal-body {
+      padding: 18px 20px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .modal-footer {
+      padding: 12px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 13.5px;
+    }
+
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+      font-size: 13.5px;
+    }
+
+    .info-table th, .info-table td {
+      border: 1px solid #cbd5e1;
+      padding: 6px 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= GIAO DIỆN CHUNG ================= -->
+  <div id="portalView">
+    <header class="portal-header">
+      <div style="display:flex; align-items:center; gap:28px; height:100%;">
+        <div class="brand-logo" onclick="switchPortalTab('tsa')">
+          <div class="brand-icon">K</div>
+          <div>
+            KHẢO THÍ
+            <span class="brand-sub">ONLINE</span>
+          </div>
+        </div>
+
+        <nav class="nav-tabs">
+          <button class="nav-tab active" id="tab-tsa" onclick="switchPortalTab('tsa')">Phòng luyện thi TSA</button>
+          <button class="nav-tab" id="tab-other" onclick="switchPortalTab('other')">Các môn học khác</button>
+          <button class="nav-tab" id="tab-docs" onclick="switchPortalTab('docs')">Tài liệu (Đề & Đáp án)</button>
+          <button class="nav-tab" id="tab-books" onclick="switchPortalTab('books')">File Sách</button>
+        </nav>
+      </div>
+
+      <div class="student-info-bar">
+        <span>Thí sinh:</span>
+        <input type="text" id="candidateNameInput" value="HUYNH QUOC THANG" />
+      </div>
+    </header>
+
+    <main class="portal-container">
+      <!-- PHẦN 1: TSA -->
+      <section id="section-tsa">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Phòng Luyện Thi Đánh Giá Tư Duy (TSA - Bách Khoa Hà Nội)</div>
+            <div class="section-subtitle">Đã nạp sẵn trọn bộ 100 câu Đề thi TSA-BKHN Số 02 (Mã đề: HSA-EDU-TSA01) từ file PDF của bạn.</div>
+          </div>
+          <div class="btn-group">
+            <button class="btn btn-fast" onclick="openPdfConverterModal()">⚡ Chuyển nhanh PDF / Text sang JSON</button>
+            <label class="btn" style="cursor:pointer;">
+              Nhập file đề (.JSON)
+              <input type="file" accept=".json" style="display:none" onchange="importExamJson(event)" />
+            </label>
+            <button class="btn" onclick="resetDefaultExams()">Khôi phục Đề TSA Số 02 gốc</button>
+          </div>
+        </div>
+
+        <div class="sub-filter-bar" id="tsaSubFilter">
+          <button class="chip active" onclick="filterExams('tsa', 'ALL', this)">Tất cả phần thi TSA</button>
+          <button class="chip" onclick="filterExams('tsa', 'Đề tổng hợp TSA', this)">Đề tổng hợp TSA (100 câu)</button>
+          <button class="chip" onclick="filterExams('tsa', 'Tư duy Toán học', this)">I. Tư duy Toán học (40 câu)</button>
+          <button class="chip" onclick="filterExams('tsa', 'Tư duy Đọc hiểu', this)">II. Tư duy Đọc hiểu (20 câu)</button>
+          <button class="chip" onclick="filterExams('tsa', 'Tư duy Khoa học', this)">III. Tư duy Khoa học (40 câu)</button>
+        </div>
+
+        <div id="tsaExamList"></div>
+      </section>
+
+      <!-- PHẦN 2: CÁC MÔN KHÁC -->
+      <section id="section-other" style="display:none;">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Phòng Luyện Thi Các Môn Học Khác</div>
+            <div class="section-subtitle">Khu vực luyện đề Toán, Vật lý, Hóa học, Sinh học, Tiếng Anh, Ngữ văn, Lịch sử, Địa lý.</div>
+          </div>
+          <div class="btn-group">
+            <button class="btn btn-fast" onclick="openPdfConverterModal()">⚡ Chuyển nhanh PDF / Text sang JSON</button>
+            <label class="btn" style="cursor:pointer;">
+              Nhập file đề (.JSON)
+              <input type="file" accept=".json" style="display:none" onchange="importExamJson(event)" />
+            </label>
+          </div>
+        </div>
+        <div id="otherExamList"></div>
+      </section>
+
+      <!-- PHẦN 3: TÀI LIỆU -->
+      <section id="section-docs" style="display:none;">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Kho Tài Liệu, Đề Thi & Đáp Án</div>
+            <div class="section-subtitle">Nơi lưu trữ và tải xuống file PDF đề thi và lời giải chi tiết.</div>
+          </div>
+          <button class="btn btn-primary" onclick="openUploadResourceModal('doc')">+ Tải lên Đề & Đáp án</button>
+        </div>
+        <div id="docsList"></div>
+      </section>
+
+      <!-- PHẦN 4: FILE SÁCH -->
+      <section id="section-books" style="display:none;">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Kho File Sách & Giáo Trình</div>
+            <div class="section-subtitle">Quản lý các đầu sách luyện thi TSA và sách tham khảo các môn.</div>
+          </div>
+          <button class="btn btn-primary" onclick="openUploadResourceModal('book')">+ Tải File Sách lên</button>
+        </div>
+        <div id="booksList"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ================= GIAO DIỆN PHÒNG THI CBT ================= -->
+  <div id="examRoomView">
+    <div class="cbt-layout">
+      <div class="cbt-main-col">
+        <div class="cbt-top-bar">
+          <div class="brand-logo" onclick="confirmExitExam()">
+            <div class="brand-icon">K</div>
+            <div>
+              KHẢO THÍ
+              <span class="brand-sub">ONLINE</span>
+            </div>
+          </div>
+          <div class="cbt-exam-title" id="cbtExamTitle">ĐỀ THI TSA-BKHN SỐ 02</div>
+        </div>
+
+        <div class="cbt-workspace" id="cbtWorkspace"></div>
+
+        <div class="cbt-bottom-bar">
+          <div class="bottom-left-controls">
+            <button class="btn-nav-prev" id="btnPrevQ" onclick="navigateQuestion(-1)">&#10094;</button>
+            <button class="btn-nav-next" id="btnNextQ" onclick="navigateQuestion(1)">Câu tiếp &#10095;</button>
+            <span style="font-size:13.5px; color:#334155; margin-left:8px;">Thời gian làm câu hiện tại</span>
+            <span id="currentQuestionTimer" style="font-size:18px; color:var(--cyan-timer); margin-left:40px;">0:00</span>
+          </div>
+
+          <div class="bottom-right-controls" id="collapsedBottomControls" style="display:none;">
+            <div class="mini-remaining-box">
+              <span>Thời gian còn lại</span>
+              <span id="cbtRemainingClockMini" style="font-size:19px; color:var(--cyan-timer);">60:00</span>
+            </div>
+            <button class="btn-open-menu" onclick="toggleRightSidebar(true)">&#10094; Mở menu / Nộp bài</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cột phải -->
+      <aside class="cbt-right-sidebar" id="cbtRightSidebar">
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <span style="font-weight:600; font-size:14px;">Thông tin thí sinh</span>
+            <button class="btn" style="padding:2px 8px; font-size:12px;" onclick="toggleRightSidebar(false)">Thu gọn &#10095;</button>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; color:#64748b; margin-bottom:14px;">
+            <span>Họ tên</span>
+            <strong id="cbtCandidateName" style="color:#1e293b;">HUYNH QUOC THANG</strong>
+          </div>
+          <div style="display:flex; gap:8px; margin-bottom:14px;">
+            <div style="flex:1; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:6px 10px; display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:12px;">Thời gian còn lại</span>
+              <span id="cbtRemainingClock" style="font-size:19px; color:var(--cyan-timer);">60:00</span>
+            </div>
+            <button class="btn btn-primary" onclick="submitCurrentExam()">Nộp bài</button>
+          </div>
+        </div>
+
+        <div style="flex:1; overflow-y:auto; padding-right:4px;">
+          <div class="palette-grid" id="cbtPaletteGrid"></div>
+        </div>
+
+        <div style="border-top:1px solid #f1f5f9; padding-top:12px; margin-top:10px;">
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
+            <span>Bạn đã hoàn thành</span>
+            <span><strong id="cbtCompletedText" style="color:var(--cyan-timer); font-size:16px;">0/40</strong> câu</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+            <div style="flex:1; height:6px; background:#f1f5f9; border-radius:4px; overflow:hidden;">
+              <div id="cbtProgressFill" style="height:100%; width:0%; background:var(--cyan-timer);"></div>
+            </div>
+            <span id="cbtProgressPercent" style="font-size:12px;">0%</span>
+          </div>
+          <div style="font-size:12px; color:#22c55e; display:flex; align-items:center; gap:6px;">
+            <span style="width:8px; height:8px; border-radius:50%; background:#22c55e; display:inline-block;"></span>
+            Đã kết nối máy chủ
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- ================= MODAL CHUYỂN ĐỔI NHANH PDF / TEXT -> JSON ================= -->
+  <div class="modal-backdrop" id="pdfConverterModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span>⚡ Công Cụ Chuyển Đổi Nhanh File PDF / Văn Bản Sang Đề Thi (.JSON)</span>
+        <button class="btn" onclick="closeModal('pdfConverterModal')">Đóng</button>
+      </div>
+      <div class="modal-body">
+        <div style="background:#f0f9ff; border:1px solid #bae6fd; border-radius:8px; padding:12px 16px; margin-bottom:14px; font-size:13.5px;">
+          <strong>2 cách chuyển từ PDF sang JSON nhanh nhất:</strong>
+          <ul style="margin-left:18px; margin-top:6px;">
+            <li><strong>Cách 1 (Tự động ngay tại đây):</strong> Chọn file <code>.PDF</code> bên dưới (hoặc dán nội dung copy từ Word/PDF), hệ thống sẽ tự tách <code>Câu 1, Câu 2...</code> và tạo đề thi ngay.</li>
+            <li><strong>Cách 2 (Chuẩn xác 100% cho đề có nhiều công thức Toán / Bảng):</strong> Bấm nút <strong>"Copy Prompt mẫu cho AI"</strong> bên dưới rồi gửi kèm file PDF vào Gemini/ChatGPT, sau đó dán kết quả JSON vào đây.</li>
+          </ul>
+          <button class="btn btn-primary" style="margin-top:8px;" onclick="copyAiPromptTemplate()">📋 Copy Prompt mẫu chuyển PDF sang JSON</button>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;">
+          <div class="form-group">
+            <label>Tên đề thi sau khi chuyển</label>
+            <input type="text" id="convExamTitle" class="form-control" value="Đề thi mới từ PDF" />
+          </div>
+          <div class="form-group">
+            <label>Phân khu</label>
+            <select id="convExamGroup" class="form-control">
+              <option value="tsa">Phòng luyện thi TSA</option>
+              <option value="other">Các môn học khác</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Môn / Phần thi</label>
+            <input type="text" id="convExamSubject" class="form-control" value="Tư duy Toán học" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Bước 1: Chọn file PDF đề thi để rút văn bản tự động</label>
+          <input type="file" accept=".pdf" class="form-control" onchange="extractTextFromPdfFile(event)" />
+        </div>
+
+        <div class="form-group">
+          <label>Bước 2: Văn bản trích xuất từ PDF (hoặc dán trực tiếp nội dung đề / mã JSON vào đây)</label>
+          <textarea id="convRawText" rows="9" class="form-control" placeholder="Nội dung đề thi dạng Câu 1. ... A. ... B. ... C. ... D. ... hoặc chuỗi JSON sẽ hiện ở đây..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('pdfConverterModal')">Hủy</button>
+        <button class="btn btn-primary" onclick="parseAndImportFromConverter()">⚡ Tạo Đề Thi & Nạp Vào Phòng Thi Ngay</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL TẢI TÀI LIỆU / SÁCH ================= -->
+  <div class="modal-backdrop" id="uploadResourceModal">
+    <div class="modal-box" style="max-width:520px;">
+      <div class="modal-header">
+        <span id="uploadModalTitle">Tải lên Đề & Đáp án</span>
+        <button class="btn" onclick="closeModal('uploadResourceModal')">Đóng</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Tiêu đề</label>
+          <input type="text" id="resTitle" class="form-control" placeholder="VD: Đề thi TSA-BKHN Số 02 (HSA-EDU-TSA01)" />
+        </div>
+        <div class="form-group">
+          <label>Phân mục</label>
+          <input type="text" id="resCategory" class="form-control" placeholder="VD: Đề tổng hợp TSA / Toán học..." />
+        </div>
+        <div class="form-group">
+          <label>Chọn File Đề / Sách (.PDF, .DOCX...)</label>
+          <input type="file" id="resMainFile" class="form-control" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('uploadResourceModal')">Hủy</button>
+        <button class="btn btn-primary" onclick="saveUploadedResource()">Lưu tài liệu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL KẾT QUẢ ================= -->
+  <div class="modal-backdrop" id="resultModal">
+    <div class="modal-box" style="max-width:560px;">
+      <div class="modal-header">
+        <span>Kết quả bài thi</span>
+        <button class="btn" onclick="closeResultAndBack()">Về trang chủ</button>
+      </div>
+      <div class="modal-body" id="resultModalBody"></div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('resultModal')">Xem lại bài làm</button>
+        <button class="btn btn-primary" onclick="closeResultAndBack()">Quay về Phòng luyện thi</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ================= HÌNH VẼ SVG CHO ĐỀ THI TSA SỐ 02 =================
+    function svgGraphQ2() {
+      const s = `<svg xmlns="http://www.w3.org/2000/svg" width="380" height="230" viewBox="0 0 380 230">
+        <rect width="380" height="230" fill="#fff"/>
+        <line x1="20" y1="130" x2="360" y2="130" stroke="#333" stroke-width="1.5"/>
+        <line x1="200" y1="15" x2="200" y2="215" stroke="#333" stroke-width="1.5"/>
+        <polyline points="50,130 150,80" fill="none" stroke="#000" stroke-width="2"/>
+        <path d="M 150 80 Q 200 -20 250 80" fill="none" stroke="#000" stroke-width="2"/>
+        <line x1="250" y1="80" x2="300" y2="200" stroke="#000" stroke-width="2"/>
+        <line x1="150" y1="80" x2="150" y2="130" stroke="#555" stroke-dasharray="4,3"/>
+        <line x1="250" y1="80" x2="250" y2="130" stroke="#555" stroke-dasharray="4,3"/>
+        <line x1="150" y1="80" x2="250" y2="80" stroke="#555" stroke-dasharray="4,3"/>
+        <line x1="300" y1="130" x2="300" y2="200" stroke="#555" stroke-dasharray="4,3"/>
+        <line x1="200" y1="200" x2="300" y2="200" stroke="#555" stroke-dasharray="4,3"/>
+        <text x="42" y="146" font-size="13">-3</text>
+        <text x="95" y="146" font-size="13">-2</text>
+        <text x="142" y="146" font-size="13">-1</text>
+        <text x="188" y="146" font-size="13">O</text>
+        <text x="247" y="146" font-size="13">1</text>
+        <text x="297" y="124" font-size="13">2</text>
+        <text x="205" y="32" font-size="13">2</text>
+        <text x="205" y="76" font-size="13">1</text>
+        <text x="182" y="204" font-size="13">-2</text>
+      </svg>`;
+      return 'data:image/svg+xml;utf8,' + encodeURIComponent(s);
+    }
+
+    function svgBBTQ33() {
+      const s = `<svg xmlns="http://www.w3.org/2000/svg" width="500" height="190" viewBox="0 0 500 190">
+        <rect width="500" height="190" fill="#fff" stroke="#333"/>
+        <line x1="0" y1="36" x2="500" y2="36" stroke="#333"/>
+        <line x1="0" y1="76" x2="500" y2="76" stroke="#333"/>
+        <line x1="70" y1="0" x2="70" y2="190" stroke="#333"/>
+        <line x1="340" y1="36" x2="340" y2="190" stroke="#333"/>
+        <line x1="344" y1="36" x2="344" y2="190" stroke="#333"/>
+        <text x="35" y="24" font-size="15" font-style="italic" text-anchor="middle">x</text>
+        <text x="95" y="24" font-size="14" text-anchor="middle">-∞</text>
+        <text x="210" y="24" font-size="14" text-anchor="middle">0</text>
+        <text x="342" y="24" font-size="14" text-anchor="middle">1</text>
+        <text x="475" y="24" font-size="14" text-anchor="middle">+∞</text>
+        <text x="35" y="62" font-size="15" font-style="italic" text-anchor="middle">f'(x)</text>
+        <text x="145" y="62" font-size="15" text-anchor="middle">+</text>
+        <text x="210" y="62" font-size="14" text-anchor="middle">0</text>
+        <text x="275" y="62" font-size="15" text-anchor="middle">-</text>
+        <text x="410" y="62" font-size="15" text-anchor="middle">+</text>
+        <text x="35" y="135" font-size="15" font-style="italic" text-anchor="middle">f(x)</text>
+        <text x="90" y="165" font-size="14">1</text>
+        <text x="206" y="102" font-size="14">3</text>
+        <text x="305" y="175" font-size="14">-∞</text>
+        <text x="355" y="175" font-size="14">-∞</text>
+        <text x="470" y="115" font-size="14">2</text>
+        <line x1="105" y1="158" x2="195" y2="105" stroke="#000" stroke-width="1.3"/>
+        <line x1="225" y1="105" x2="310" y2="160" stroke="#000" stroke-width="1.3"/>
+        <line x1="375" y1="162" x2="462" y2="115" stroke="#000" stroke-width="1.3"/>
+      </svg>`;
+      return 'data:image/svg+xml;utf8,' + encodeURIComponent(s);
+    }
+
+    // ================= DỮ LIỆU 100 CÂU ĐỀ THI TSA-BKHN SỐ 02 (HSA-EDU-TSA01) =================
+    const PASSAGE_DOC_1 = `
+      <h4 style="margin-bottom:10px; color:#0f172a;">Đọc văn bản sau và trả lời các câu hỏi (Từ câu 41 đến câu 50):</h4>
+      <div style="text-align:center; font-weight:700; margin-bottom:10px;">HÀNG XÓM</div>
+      <p><strong>[1]</strong> Hàng xóm này cụ thể là hàng xóm ở đối diện. Tầng có tất cả chín nhà, quây xung quanh cái cầu thang máy. [...] Nhà nào cũng khóa cả cửa sắt bên ngoài và cửa gỗ bên trong. Giữa cửa sắt và cửa gỗ có năm mươi phân cách biệt, không hiểu người ta thiết kế như thế để làm gì, năm mươi phân thì để vừa được gì và ai cần để cái gì giữa cửa sắt và cửa gỗ. Thực ra chẳng có nhà nào để gì cả, trừ nhà hàng xóm ấy. Mỗi lần ông nhìn chênh chếch sang, đều thấy mấy đôi dép xếp thẳng hàng. Bốn đôi người lớn và hai đôi trẻ con vào ngày nghỉ. Hai đôi người lớn vào giờ hành chính ngày trong tuần. Lại đủ bốn đôi người lớn và hai đôi trẻ con sau sáu giờ chiều từ thứ Hai đến thứ Sáu. [...]</p>
+      <p><strong>[2]</strong> Thực ra ông chẳng cố tình nhìn vào nhà ấy làm gì. Mỗi người đã có cửa của mình, ai bước vào cửa nấy. Chẳng qua chỉ một lần vô tình lúc mở cửa, hôm ấy chắc giở giời, người ngợm thế nào cứ uể oải, làm gì cũng chậm chạp hơn, ông bỗng thấy đôi dép xỏ ngón màu hồng có nơ bé bé, ở bên kia cửa sắt nhà chênh chếch đối diện. Giống như là đang lướt mắt qua cả vệt hành lang, cái nhìn bỗng mắc lại ở chỗ nơ hồng ấy. Đôi dép xinh xinh chắc của bé gái độ tám, mười tuổi. Chắc bằng tuổi cháu ông. Cháu tuần về chơi với ông một lần. Tuần nào bố mẹ nó bận thì có thể may mắn hơn, cháu sẽ được gửi qua đêm với ông; hoặc có thể ít may mắn hơn, vì bận mà chẳng buồn đưa cháu về nữa. Nhưng đúng lịch thì một tuần sẽ có một lần hai ông cháu gặp nhau. Bố mẹ nó về đây ăn uống thăm hỏi một ngày, rồi sáu ngày tiếp theo ông lại tự ăn uống thăm hỏi một mình, chờ đến Chủ nhật. [...]</p>
+      <p><strong>[3]</strong> Ông từng chờ rất nhiều lần xem hàng xóm của mình là ai. Ở chung cư này đa phần là các gia đình trẻ, có vài nhà như ông, sống một mình. Rất hiếm những gia đình nhiều thế hệ. Nên cánh cửa ấy càng làm ông tò mò hơn. Thế nhưng hình như hàng xóm cứ chờ ông bận bịu đâu đó không ngó ra cửa được thì mới đi ra đi vào. [...]</p>
+      <p><strong>[4]</strong> Cho đến một ngày, khi ông đã thôi ý định ngồi ngóng ra cửa chỉ để chờ gặp hàng xóm, ông bỗng dưng lại gặp bà. Bà bé nhỏ, chắc quãng tuổi ông, hoặc nhiều ít hơn đôi chút. Ông gặp bà trong thang máy, lên cùng một tầng. Đôi mắt bà đỏ hoe, đầu mũi cũng đỏ. Bà im lặng không nhìn ai, chờ mọi người ra hết rồi mới bước ra khỏi thang, đi về cửa căn hộ ấy. Bà bước vào nhà, bên cạnh một đôi dép đàn ông đã xếp sẵn ở cửa, giờ xếp thêm đôi dép phụ nữ. Ông cứ đứng nhìn từ cửa nhà mình, vì bất ngờ quá. [...] Sự tò mò về sáu đôi dép lớn một, thì tò mò về đôi mắt ướt nhẹp đỏ hoe của bà hàng xóm phải lớn gấp mười. Ông cứ nghĩ mãi, ở cái tuổi này còn gì có thể làm cho người ta khóc? Trừ sự tủi thân. Hoặc mất mát. [...]</p>
+      <p><strong>[5]</strong> Đến một ngày, nghĩ mãi vẫn chẳng có cớ gì, nhưng ông vẫn sang ấn chuông nhà hàng xóm. [...] Thế mà rồi cửa lại mở. Bà lão he hé cửa chào ông. Ông bất ngờ quá, không biết nói gì, tự dưng lại xin bà một phích nước.<br/>- Phiền bác quá, ấm đun nước nhà tôi bỗng dưng lại hỏng, các cháu thì đi làm hết rồi, thèm ấm trà mà không pha được...<br/>Thế mà bà lão mở hẳn cửa ra. Mời ông vào. [...] Uống hết cả ấm trà, câu chuyện vẫn do ông và bà, tự dưng ông buột miệng thế. Xong im lặng. Nào ông đã gặp cháu gái bà bao giờ. Bà cũng im. Lặng. [...]</p>
+      <p><strong>[6]</strong> Rốt cuộc ông đứng dậy, nói cố một câu trước khi về:<br/>- Thực ra tôi ở đây có một mình thôi. Các cháu cuối tuần mới về.<br/>Bà một lúc mới cất lời, chẳng ngước lên nhìn ông:<br/>- Thực ra tôi cũng ở đây có một mình thôi. Tôi thậm chí chẳng có các cháu để cuối tuần về. Sáu đôi dép tôi tự mua tự xếp đấy. Để tự thấy rằng mình ấm áp.<br/>Ông đứng lên rồi lại ngồi xuống. Nhìn bà. Kinh ngạc.<br/>Bà dừng một hồi rồi tiếp:<br/>- Trước đây tôi còn có con chó, sống cùng tôi từ mười bốn năm nay, từ trước cả khi chuyển về đây ở. [...] Nhưng đến nó cũng ra đi rồi. Tôi đành đem chôn. Có mỗi tôi khóc cho nó. Tôi cũng chỉ có mỗi nó để khóc mà thôi... [...]<br/>Ông xoay xoay cốc trà đã cạn, không biết làm gì với bà lão mắt đã lại đỏ hoe, vết đỏ lan ra đến tận đầu mũi. Xoay cốc đủ hai mươi chín vòng thì ông nói, rồi dứt khoát đứng lên đi về trước khi vệt đỏ ấy lan sang cả mắt rồi tràn xuống đầu mũi ông mất.<br/>- Xin phép bác, Chủ nhật cho ông cháu tôi sang đây xin phích nước nóng.</p>
+      <p style="font-style:italic; font-size:13px; color:#64748b;">(Trích Hàng xóm, Chu Thùy Anh, Xanh, NXB Văn học, 2016, tr. 165-174)</p>
+    `;
+
+    const PASSAGE_DOC_2 = `
+      <h4 style="margin-bottom:10px; color:#0f172a;">Đọc văn bản sau và trả lời các câu hỏi (Từ câu 51 đến câu 60):</h4>
+      <p><strong>[1]</strong> Tiêu vong là nguy cơ không chỉ với ngôn ngữ các dân tộc thiểu số ở Việt Nam mà còn là nguy cơ đối với các ngôn ngữ khác trên toàn cầu. Theo kết quả điều tra dân số năm 2009, trong số 54 dân tộc, dân tộc Kinh chiếm 85,6% tổng dân số cả nước, là dân tộc đa số, còn lại là các dân tộc thiểu số. Thực tế nghiên cứu trong nhiều năm gần đây, Việt Nam có khoảng 90 ngôn ngữ khác nhau.</p>
+      <p><strong>[2]</strong> Ở Việt Nam, số người nói các ngôn ngữ dân tộc thiểu số không nhiều (đặc biệt ít so với tiếng Việt). Các dân tộc thiểu số ở Việt Nam thường cư trú phân tán xen kẽ với các dân tộc khác, do đó số lượng người nói một ngôn ngữ trong một đơn vị hành chính không cao và không tập trung. Số người nói được các ngôn ngữ dân tộc thiểu số thường thuộc lứa tuổi già và trung niên. Nhiều trẻ em không biết (chuyển sang nói ngôn ngữ khác) hoặc nói ngôn ngữ khác nhiều hơn, thạo hơn so với tiếng mẹ đẻ của mình.</p>
+      <p><strong>[3]</strong> Hiện nay, quá nửa số dân tộc thiểu số ở Việt Nam đã có chữ viết: Tày, Thái, Hoa, Khmer, Nùng, Mông, Dao... Các dân tộc này có hệ thống chữ cổ truyền hoặc mới. Có dân tộc có tới vài ba bộ chữ (Chăm, Thái, Tày, Mông...). Ở vùng đồng bào các dân tộc thiểu số, việc sử dụng đồng thời hai ngôn ngữ (tiếng Việt và tiếng mẹ đẻ của các dân tộc thiểu số) là phổ biến. Tuy nhiên, số người thuộc các dân tộc thiểu số biết tiếng mẹ đẻ thật sự sâu sắc, biết chữ và tạo lập được văn bản bằng chữ còn rất ít. Đa số ngôn ngữ các dân tộc thiểu số ở Việt Nam hiện nay không được truyền dạy có tổ chức, chỉ được truyền dạy tự nhiên hoặc đang "thử nghiệm" và chỉ được dùng dưới dạng khẩu ngữ, trong phạm vi gia đình, làng bản...</p>
+      <p><strong>[4]</strong> Nhà nước Việt Nam thừa nhận và đảm bảo về mặt pháp lý quyền có ngôn ngữ riêng, quyền bình đẳng ngôn ngữ của tất cả các dân tộc ở Việt Nam. Chẳng hạn, Điều 5, Chương 1, Hiến pháp Việt Nam năm 1980, ghi: "Các dân tộc có quyền dùng tiếng nói, chữ viết, giữ gìn và phát huy những phong tục, tập quán, truyền thống và văn hóa tốt đẹp của mình". Ngày 21 tháng 2 hàng năm đã được quy ước là Ngày Quốc tế về tiếng mẹ đẻ.</p>
+      <p><strong>[5]</strong> Ở Việt Nam hiện nay có đủ mức độ về sức sống của các ngôn ngữ các dân tộc thiểu số như khỏe mạnh, suy yếu, nguy cấp và hầu như chỉ còn trong ký ức. Đa số các ngôn ngữ dân tộc thiểu số ở Việt Nam thuộc loại suy yếu hoặc ở mức thấp hơn. Nguy cấp: Pu Péo, Cơ Lao (Trắng), Mã Liềng, Rục, Mày, Sách, A Rem... Hầu như chỉ còn trong ký ức: Người Tu Dí, Ơ Đu, San Chí, Cơ Lao (Đỏ)...</p>
+      <p><strong>[6]</strong> Nhân tố quan trọng nhất đem lại sức sống cho các ngôn ngữ là ở chỗ chúng được truyền dạy và có vai trò (được sử dụng) trong đời sống xã hội. Ngoài ra, cần có những biện pháp khác như: kế hoạch hóa và xây dựng chính sách ngôn ngữ, nghiên cứu cơ bản; cải tiến và xây dựng các hệ thống chữ viết; biên soạn các sách dạy và học; xây dựng ngân hàng dữ liệu...</p>
+      <p style="font-style:italic; font-size:13px; color:#64748b;">(Theo Sự sinh tồn của các ngôn ngữ ở Việt Nam hiện nay, Tạ Văn Thông, Tạ Quang Tùng, Tạp chí KHXH, 2019)</p>
+    `;
+
+    const PASSAGE_SCI_1 = `
+      <h4 style="margin-bottom:8px;">Ngữ liệu Khoa học 1 (Câu 61 – 66): Quá trình đông máu</h4>
+      <p>Máu động vật có xương sống là một mô liên kết gồm các tế bào lơ lửng trong một khối dịch gọi là huyết tương. Hòa tan trong huyết tương là các ion và protein, chúng cùng với các tế bào máu, có chức năng trong điều hòa thẩm thấu, vận chuyển và bảo vệ. Tách các thành phần của máu bằng máy ly tâm cho thấy các thành phần tế bào chiếm khoảng 45% thể tích của máu, phần còn lại là huyết tương.</p>
+      <p>Lơ lửng trong huyết tương là hai loại tế bào: hồng cầu vận chuyển $\\text{O}_2$ và bạch cầu có chức năng bảo vệ. Máu cũng có tiểu cầu, là các mảnh tế bào tham gia vào quá trình đông máu.</p>
+      <p><strong>1.</strong> Quá trình đông máu bắt đầu khi nội mạc của mạch máu bị tổn thương làm cho mô liên kết ở thành mạch tiếp xúc với máu. Khi đó, các tiểu cầu gắn kết với các sợi collagen ở mô liên kết và giải phóng một chất làm các tiểu cầu lân cận dính lại.</p>
+      <p><strong>2.</strong> Các tiểu cầu hình thành một nút tạo sự bảo vệ khẩn cấp chống mất máu.</p>
+      <p><strong>3.</strong> Nút này được tăng cường bởi lưới fibrin khi mạch máu bị tổn thương nặng nề. Các yếu tố đông máu giải phóng từ các tiểu cầu kết dính hoặc các tế bào bị tổn thương hòa trộn với các yếu tố đông máu trong huyết tương (calcium, vitamin K) tạo thành một dòng thác hoạt hóa chuyển đổi một protein huyết tương gọi là <strong>prothrombin</strong> thành dạng hoạt hóa là <strong>thrombin</strong>. Thrombin là một enzyme xúc tác bước cuối cùng của quá trình đông máu, chuyển <strong>fibrinogen</strong> thành <strong>fibrin</strong>. Các sợi fibrin đan xen nhau tạo thành <strong>lưới fibrin</strong>.</p>
+    `;
+
+    const PASSAGE_SCI_2 = `
+      <h4 style="margin-bottom:8px;">Ngữ liệu Khoa học 2 (Câu 67 – 73): Quá trình điện phân</h4>
+      <p>Điện phân là quá trình oxi hoá - khử xảy ra trên bề mặt điện cực khi có dòng điện một chiều đi qua chất điện li nóng chảy hoặc dung dịch chất điện li. Khi cho dòng điện 1 chiều chạy qua, các ion dương di chuyển về điện cực âm (catot) và các ion âm sẽ di chuyển về điện cực dương (anot). Tại điện cực dương xảy ra quá trình oxi hoá, còn tại điện cực âm xảy ra quá trình khử.</p>
+      <p>Để điều chế $\\text{NaOH}$ người ta điện phân dung dịch $\\text{NaCl}$ bão hoà, có màng ngăn: $2\\text{NaCl} + 2\\text{H}_2\\text{O} \\rightarrow 2\\text{NaOH} + \\text{H}_2 + \\text{Cl}_2$. Trong đó $2\\text{NaOH} + \\text{H}_2$ sinh ra ở cực âm và $\\text{Cl}_2$ sinh ra ở cực dương.</p>
+      <p>Nếu không có màng ngăn, $\\text{NaOH}$ phản ứng với $\\text{Cl}_2$ sinh ra nước Javen: $2\\text{NaOH} + \\text{Cl}_2 \\rightarrow \\text{NaCl} + \\text{NaClO} + \\text{H}_2\\text{O}$.</p>
+      <p>Công thức Faraday: $m = \\dfrac{A \\cdot I \\cdot t}{n \\cdot F}$, trong đó $m$: khối lượng chất giải phóng (gam); $A$: khối lượng mol nguyên tử; $n$: số electron trao đổi; $I$: cường độ dòng điện (A); $t$: thời gian điện phân (s); $F \\approx 96500\\text{ C/mol}$.</p>
+    `;
+
+    const PASSAGE_SCI_3 = `
+      <h4 style="margin-bottom:8px;">Ngữ liệu Khoa học 3 (Câu 74 – 80): Mô hình hạt nhân</h4>
+      <p><strong>Mô hình giọt chất lỏng (Bohr, 1936):</strong> Các nucleon tương tác mạnh giống như các phân tử trong một giọt chất lỏng.</p>
+      <p>1. Độ bền vững liên quan đến hình dạng: Hạt nhân dạng hình cầu thường bền vững; hạt nhân hình giọt nước kém bền vững hơn và dễ phân rã.<br/>2. Khối lượng và thể tích tỷ lệ với số nucleon.<br/>3. Sự kết hợp của hai hạt nhân giống như sự kết hợp của hai giọt nước.<br/>4. Sự va chạm của các nucleon năng lượng cao có thể khiến hạt nhân phân rã.</p>
+      <p><strong>Mô hình vỏ hạt nhân (Mayer & Jensen, 1949):</strong> Hạt nhân chứa các dải năng lượng riêng biệt gọi là vỏ năng lượng.</p>
+      <table class="info-table">
+        <tr><th>Lớp vỏ</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>
+        <tr><td>Số proton tối đa (Z)</td><td>2</td><td>6</td><td>12</td><td>18</td><td>22</td></tr>
+        <tr><td>Số neutron tối đa (N)</td><td>2</td><td>6</td><td>12</td><td>18</td><td>22</td></tr>
+      </table>
+      <p>Khi mọi lớp vỏ ngoài đều trống, còn các lớp vỏ bên trong đều chứa số lượng proton hoặc neutron tối đa, thì hạt nhân đó là <strong>thần kỳ (magic)</strong>. Các số nucleon thần kỳ là: <strong>2, 8, 20, 28, 50, 82 và 126</strong>.</p>
+    `;
+
+    const PASSAGE_SCI_4 = `
+      <h4 style="margin-bottom:8px;">Ngữ liệu Khoa học 4 (Câu 81 – 87): Sự truyền sáng qua lăng kính</h4>
+      <p>Sự truyền sáng qua các mặt bên của lăng kính đặt trong không khí ($n > 1$) tuân theo định luật khúc xạ ánh sáng:</p>
+      <p>$$\\frac{\\sin i_1}{\\sin r_1} = n \\quad (1) \\qquad ; \\qquad \\frac{\\sin r_2}{\\sin i_2} = \\frac{1}{n} \\quad (2)$$</p>
+      <p>Góc chiết quang $A$ và góc lệch $D$ (giữa tia tới $SI$ và tia ló $JR$): $A = r_1 + r_2$ (3); $D = i_1 + i_2 - A$ (4).</p>
+      <p>Góc lệch đạt cực tiểu $D_{\\min}$ khi $i_1 = i_2$ và $r_1 = r_2 = \\frac{A}{2}$. Khi đó: $\\sin\\left(\\frac{D_{\\min} + A}{2}\\right) = n\\sin\\frac{A}{2}$ (5).</p>
+      <p><strong>Thí nghiệm 1:</strong> Chiếu 3 bút laser phát ra ánh sáng lục, lam và đỏ qua một lăng kính nước thì vệt sáng đỏ lệch ít nhất, tiếp theo là lục, và tia lam bị lệch nhiều nhất về phía đáy lăng kính.</p>
+    `;
+
+    const PASSAGE_SCI_5 = `
+      <h4 style="margin-bottom:8px;">Ngữ liệu Khoa học 5 (Câu 88 – 94): Tính chất vật lí của Aren & Sản xuất rượu</h4>
+      <table class="info-table">
+        <tr><th>Aren</th><th>Công thức</th><th>Nhiệt độ sôi (°C)</th><th>Nhiệt độ nóng chảy (°C)</th><th>Khối lượng riêng ($\\text{g/cm}^3$)</th></tr>
+        <tr><td>Benzen</td><td>$\\text{C}_6\\text{H}_6$</td><td>80</td><td>5,5</td><td>0,879</td></tr>
+        <tr><td>Toluen</td><td>$\\text{C}_7\\text{H}_8$</td><td>111</td><td>-95,0</td><td>0,867</td></tr>
+        <tr><td>Etylbenzen</td><td>$\\text{C}_8\\text{H}_{10}$</td><td>136</td><td>-95,0</td><td>0,867</td></tr>
+        <tr><td>Propylbenzen</td><td>$\\text{C}_9\\text{H}_{12}$</td><td>159</td><td>-99,0</td><td>0,862</td></tr>
+      </table>
+      <p><strong>Sản xuất rượu:</strong> Thủy phân tinh bột/đường thành glucozơ ($\\text{C}_6\\text{H}_{12}\\text{O}_6$), sau đó lên men thành etanol ($\\text{C}_2\\text{H}_5\\text{OH}$). Quá trình lên men các nguyên liệu chứa bã gỗ (xenlulozơ) sinh ra nhiều độc tố metanol ($\\text{CH}_3\\text{OH}$). Ở phân đoạn chưng cất ban đầu (rượu đầu) chứa nhiều metanol. Theo TCVN 7043:2013, hàm lượng metanol không được vượt quá $2000\\text{ mg}$ tính trên 1 lít rượu etanol $100^\\circ$.</p>
+    `;
+
+    const PASSAGE_SCI_6 = `
+      <h4 style="margin-bottom:8px;">Ngữ liệu Khoa học 6 (Câu 95 – 100): Ti thể và tổng hợp ATP</h4>
+      <p>Ti thể là bào quan có màng kép. Màng trong lõm sâu tạo thành các mào, chứa các enzyme của chuỗi truyền electron, kênh vận chuyển proton $\\text{H}^+$ và kênh tổng hợp ATP (ATP synthase). Trong chất nền có chứa nhiều enzyme, acid hữu cơ, ribosome 70S, các DNA trần dạng vòng.</p>
+      <p>Quá trình vận chuyển electron từ NADH và $\\text{FADH}_2$ qua 4 phức hệ I, II, III, IV đến $\\text{O}_2$ đồng thời bơm các $\\text{H}^+$ từ chất nền ti thể ra khoảng không gian giữa hai màng, làm nồng độ $\\text{H}^+$ ở chất nền thấp hơn (pH cao hơn) so với khoảng giữa hai màng. Sự di chuyển của $\\text{H}^+$ quay lại chất nền qua kênh ATP synthase giúp tổng hợp ATP từ ADP và Pi.</p>
+    `;
+
+    const QUESTIONS_MATH_40 = [
+      { slot: 1, type: 'single', prompt: 'Biết rằng $F(x) = \\ln|2x+1|$ là một nguyên hàm của hàm số $f(x) = \\dfrac{2}{2x+1}$. Cho $\\displaystyle\\int_0^4 \\dfrac{dx}{2x+1} = \\ln S$. Khi đó giá trị của $S$ là:', options: ['3.', '9.', '81.', '8.'], correct: 0 },
+      { slot: 2, type: 'single', prompt: 'Cho hàm số $y = f(x)$ xác định trên đoạn $[-3;2]$ và có đồ thị như hình vẽ sau:\n[IMAGE]\nGọi $M, m$ lần lượt là giá trị lớn nhất và nhỏ nhất của hàm số $y = f(x)$ trên đoạn $[-3;2]$. Khi đó giá trị $M - 2m$ bằng:', image: svgGraphQ2(), options: ['5.', '4.', '7.', '6.'], correct: 3 },
+      { slot: 3, type: 'single', prompt: 'Mùa hè năm 2023, một công ty thời trang sản xuất ba dáng áo phông mới, mỗi dáng áo đều được sản xuất với các màu: Cam, đỏ, trắng, vàng và xanh và với các cỡ: S, M, L, XL, XXL, XXXL. Có tất cả bao nhiêu loại áo phông khác nhau mà công ty sản xuất cho dịp hè 2023?', options: ['90.', '14.', '72.', '30.'], correct: 0 },
+      { slot: 4, type: 'single', prompt: 'Cho hai biến cố $A, B$ thỏa mãn $P(A) = 0,4$; $P(B) = 0,3$ và $P(A \\cup B) = 0,625$. Khi đó, $P(A|B)$ bằng:', options: ['0,1875.', '0,075.', '0,4.', '0,25.'], correct: 3 },
+      { slot: 5, type: 'fill_blank', instruction: 'Điền số nguyên dương thích hợp vào chỗ trống:', prompt: 'Trong không gian $Oxyz$, cho mặt cầu $(S): x^2 + y^2 + z^2 - 2x + 4y - 2mz + m^2 - m = 0$, ở đó $m$ là một tham số thực nhận giá trị dương. Biết mặt cầu $(S)$ có diện tích bằng $100\\pi$, giá trị của $m$ bằng [blank].', correctAnswers: ['20'] },
+      { slot: 6, type: 'true_false', prompt: 'Cho $a < b$ và hàm số $f(x)$ liên tục trên đoạn $[a;b]$. Hãy xác định tính đúng, sai của mỗi phát biểu sau:', statements: [
+        { text: '$\\displaystyle\\int_a^b k\\cdot f(x)dx = k\\cdot \\int_a^b f(x)dx$ ($k$ là hằng số)', correct: 'T' },
+        { text: '$\\displaystyle\\int_a^b f(x)dx = \\int_b^a f(x)dx$', correct: 'F' }
+      ]},
+      { slot: 7, type: 'fill_blank', prompt: 'Cho hình chóp $S.ABC$. Gọi $M, N$ lần lượt là các điểm trên các cạnh $SA, SB$ sao cho $SA = 2SM, 2NS = 3NB$. Giá trị của biểu thức $t = \\dfrac{V_{S.MNC}}{V_{S.ABC}}$ bằng [blank] (viết dưới dạng số thập phân).', correctAnswers: ['0,3'] },
+      { slot: 8, type: 'true_false', prompt: 'Mỗi phát biểu sau đúng hay sai?', statements: [
+        { text: 'Hai đường thẳng song song thì đồng phẳng.', correct: 'T' },
+        { text: 'Hai đường thẳng chéo nhau thì không có điểm chung.', correct: 'T' },
+        { text: 'Hai đường thẳng không có điểm chung thì chéo nhau.', correct: 'F' },
+        { text: 'Hai đường thẳng chéo nhau thì không đồng phẳng.', correct: 'T' }
+      ]},
+      { slot: 9, type: 'single', prompt: 'Cho các dãy số với công thức của số hạng tổng quát, dãy số nào là một cấp số cộng?', options: ['$u_n = \\sin(n).$', '$u_n = \\dfrac{3n-1}{2}.$', '$u_n = \\dfrac{1}{n}.$', '$u_n = n^2 + n + 1.$'], correct: 1 },
+      { slot: 10, type: 'single', prompt: 'Bạn An phát biểu: "Tích các số liên tiếp từ 1 đến 80 không chia hết cho 1000000". Phát biểu của An đúng hay sai?', options: ['Đúng', 'Sai'], correct: 1 },
+      { slot: 11, type: 'single', prompt: 'Tập nghiệm của bất phương trình $\\log_{\\frac{1}{2}}(2x-1) > \\log_{\\frac{1}{2}}(x+1)$ là:', options: ['$S = (-1;2)$', '$S = (-\\infty;2)$', '$S = \\left(\\dfrac{1}{2};2\\right)$', '$S = (2;+\\infty)$'], correct: 2 },
+      { slot: 12, type: 'single', prompt: 'Cho hàm số $f(x)$ xác định, có đạo hàm trên $\\mathbb{R}$ và $f(0) = 2$. Khi đó, đạo hàm của hàm số $g(x) = f(x)\\cdot \\sin x$ tại $x = 0$ bằng:', options: ['1', '2', '0', '3'], correct: 1 },
+      { slot: 13, type: 'single', prompt: 'Bạn Nam có một khối cầu có đường kính bằng $4\\text{ cm}$. Thể tích của khối cầu là:', options: ['$8,4\\text{ cm}^3$', '$18,8\\text{ cm}^3$', '$33,5\\text{ cm}^3$', '$8,0\\text{ cm}^3$'], correct: 2 },
+      { slot: 14, type: 'fill_blank', prompt: 'Cho hình nón tròn xoay có chiều cao $h = 4\\text{ m}$, bán kính đáy $r = 3\\text{ m}$. Diện tích xung quanh của hình nón đã cho bằng [blank] $\\text{m}^2$ (Kết quả làm tròn đến chữ số thập phân thứ nhất, biết $\\pi \\approx 3,14$).', correctAnswers: ['47,1'] },
+      { slot: 15, type: 'fill_blank', prompt: 'Cho hình phẳng $(H)$ giới hạn bởi các đường $y = \\sqrt{x}, y = 0, x = 2$ và $x = 6$. Thể tích khối tròn xoay thu được khi quay $(H)$ quanh trục $Ox$ là [blank] (Lấy $\\pi \\approx 3,14$).', correctAnswers: ['50,24'] },
+      { slot: 16, type: 'true_false', prompt: 'Cho một hình nón có thiết diện qua trục là tam giác đều có diện tích bằng $2\\sqrt{3}$. Mỗi phát biểu sau là đúng hay sai?', statements: [
+        { text: 'Bán kính đáy của hình nón đã cho bằng $\\sqrt{2}$.', correct: 'T' },
+        { text: 'Thể tích của khối nón được giới hạn bởi hình nón đã cho bằng $\\dfrac{\\pi\\sqrt{6}}{3}$.', correct: 'F' }
+      ]},
+      { slot: 17, type: 'drag_drop', tokens: ['2π', 'π', 'π/12', 'π/6'], prompt: 'Kéo các số đã cho vào các chỗ chấm thích hợp trong các câu sau:\n• Phương trình $\\sin 2x = \\dfrac{1}{2}$ có một nghiệm là $x =$ [blank].\n• Phương trình $\\sin x + 2\\cos x = 2$ có một nghiệm là $x =$ [blank].', correctAnswers: ['π/12', '2π'] },
+      { slot: 18, type: 'drag_drop', tokens: ['-1/512', '9/256', '-9/256', '1/512', '36/256'], prompt: 'Xét khai triển của biểu thức $\\left(x - \\dfrac{1}{2}\\right)^9$. Kéo các số thích hợp vào chỗ trống:\n• Số hạng không chứa $x$ trong khai triển là [blank].\n• Hệ số của $x$ trong khai triển là [blank].\n• Tổng các hệ số của khai triển là [blank].', correctAnswers: ['-1/512', '9/256', '1/512'] },
+      { slot: 19, type: 'drag_drop', tokens: ['12', '24', '64', '36', '48'], prompt: 'Gia đình bạn Dương (gồm ông nội, bà nội, bố, mẹ và Dương) ngồi vào một chiếc ghế dài vừa đủ cho 5 người ngồi. Kéo các số thích hợp vào chỗ trống:\n• Số cách sắp xếp để bạn Dương ngồi chính giữa là: [blank].\n• Số cách sắp xếp để ông nội và bố ngồi ở hai đầu ghế là: [blank].\n• Số cách sắp xếp để Dương ngồi cạnh bố là: [blank].', correctAnswers: ['24', '12', '48'] },
+      { slot: 20, type: 'true_false', prompt: 'Cho phương trình $\\log_2\\sqrt{|x|} - 4\\sqrt{\\log_4|x|} - 5 = 0$. Các khẳng định sau là đúng hay sai?', statements: [
+        { text: 'Điều kiện xác định của phương trình là $-1 \\le x \\le 1$.', correct: 'F' },
+        { text: 'Đặt $\\sqrt{\\dfrac{1}{2}\\log_2|x|} = t, t \\ge 0$ thì phương trình trở thành $2t^2 - t - 5 = 0$.', correct: 'F' },
+        { text: 'Phương trình có 2 nghiệm phân biệt.', correct: 'T' }
+      ]},
+      { slot: 21, type: 'true_false', prompt: 'Phương trình $25^x + 15^x = 6\\cdot 9^x$ có một nghiệm duy nhất được viết dưới dạng $\\dfrac{a}{\\log_b c - \\log_b d}$ với $a$ là số nguyên dương và $b, c, d$ là các số nguyên tố. Mỗi phát biểu sau là đúng hay sai?', statements: [
+        { text: '$a$ là số nguyên tố.', correct: 'F' },
+        { text: '$b$ là số chẵn.', correct: 'T' },
+        { text: 'Tổng $S = a^2 + b + c + d = 10$.', correct: 'F' }
+      ]},
+      { slot: 22, type: 'single', prompt: 'Một sơ đồ các lối đi một chiều theo chiều mũi tên để đi từ địa điểm A tới địa điểm H (A đến B có 2 đường, B đến D có 1 đường; A đến C có 1 đường, C đến D có 3 đường; từ D đi qua E, G, F tới H lần lượt có $2\\times 1$, $1\\times 2$ và $2\\times 2$ đường). Số cách để đi từ A tới H là:', options: ['17', '40', '13', '20'], correct: 1 },
+      { slot: 23, type: 'fill_blank', prompt: 'Xuất phát từ số nguyên dương $N$, thuật toán $P$ tính tổng các chữ số liên tiếp cho đến khi chỉ còn 1 chữ số $P(N)$. Nếu tiến hành thuật toán $P$ với số $N = 10^{10^{1954}} + 10101954$ thì giá trị đầu ra $P(N)$ bằng [blank].', correctAnswers: ['4'] },
+      { slot: 24, type: 'drag_drop', tokens: ['√14', '2√7', '√7', '14√7', '7√14'], prompt: 'Cho hình trụ tròn xoay có đường cao $h = 7$, bán kính đáy $r = 4$. Xét mặt phẳng $(P)$ song song với trục của hình trụ, cách trục một khoảng bằng 3:\n• $(P)$ cắt hình tròn đáy theo một đoạn giao tuyến có độ dài bằng [blank].\n• Diện tích thiết diện của hình trụ với mặt phẳng $(P)$ bằng [blank].', correctAnswers: ['2√7', '14√7'] },
+      { slot: 25, type: 'drag_drop', tokens: ['1', '1,5', '0,5'], prompt: 'Một guồng nước có bán kính $2,5\\text{ m}$; trục của nó cách mặt nước $2\\text{ m}$. Khoảng cách $h(m)$ từ một ống đựng nước đến mặt nước tính theo công thức $h = |y|$ với $y = 2,5\\sin\\left(2\\pi x - \\dfrac{\\pi}{2}\\right) + 2$ ($x$ là phút).\n• Ban đầu, tại thời điểm $x = 0$, ống nước cách mặt nước: [blank] (m).\n• Khoảng thời gian giữa hai lần ống nước ở vị trí cao nhất là: [blank] (phút).', correctAnswers: ['0,5', '1'] },
+      { slot: 26, type: 'true_false', prompt: 'Bạn Sơn tìm nghiệm $x \\in [0;2\\pi)$ của ba phương trình: (1) $\\cos x = 1$; (2) $\\sin x = \\dfrac{1}{2}$; (3) $\\sin x + \\cos x = \\dfrac{3}{2}$. Mỗi phát biểu sau là đúng hay sai?', statements: [
+        { text: 'Phương trình (1) có nghiệm duy nhất trên $[0;2\\pi)$.', correct: 'T' },
+        { text: 'Phương trình (2) có 2 nghiệm phân biệt trên $[0;2\\pi)$.', correct: 'T' },
+        { text: 'Phương trình (3) có 3 nghiệm phân biệt trên $[0;2\\pi)$.', correct: 'F' }
+      ]},
+      { slot: 27, type: 'single', prompt: 'Đặt một dây lạt thẳng lên mặt chiếc bánh chưng hình vuông thì bánh chia thành 2 phần; đặt 2 dây lạt cắt nhau bên trong mặt bánh thì chia thành 4 phần. Nếu đặt 7 dây lạt thẳng thì chiếc bánh được chia thành tối đa bao nhiêu phần?', options: ['128', '29', '14', '49'], correct: 1 },
+      { slot: 28, type: 'true_false', prompt: 'Xét hình đa diện $(H)$ có tất cả các mặt là ngũ giác. Mỗi phát biểu sau là đúng hay sai?', statements: [
+        { text: 'Số cạnh của $(H)$ là một số chia hết cho 5.', correct: 'T' },
+        { text: 'Số mặt của $(H)$ là một số chẵn.', correct: 'T' },
+        { text: 'Số cạnh của $(H)$ gấp ba lần số mặt của $(H)$.', correct: 'F' }
+      ]},
+      { slot: 29, type: 'true_false', prompt: 'Cho dãy số $(u_n)$ xác định bởi $u_1 = 1$, $u_n = 3(u_{n-1} + 2)$ với mọi $n \\ge 2$. Đặt $v_n = u_n + 3$ với mọi $n \\in \\mathbb{N}^*$. Mỗi phát biểu sau là đúng hay sai?', statements: [
+        { text: '$(v_n)$ là một cấp số nhân với công bội $q = 3$.', correct: 'T' },
+        { text: 'Số hạng tổng quát của dãy số $(v_n)$ là $v_n = 3^n$.', correct: 'F' },
+        { text: 'Số hạng tổng quát: $u_n = 4\\cdot 3^{n-1} - 3$ với mọi $n \\in \\mathbb{N}^*$.', correct: 'T' }
+      ]},
+      { slot: 30, type: 'fill_blank', prompt: 'Cho tứ diện $ABCD$. Lấy hai điểm $M, N$ lần lượt là trọng tâm của các tam giác $ABC$ và $ABD$. Cho các khẳng định: 1) $MN // (BCD)$; 2) $MN // (ACD)$; 3) $MN // (ABD)$. Trong các khẳng định trên, có [blank] khẳng định ĐÚNG.', correctAnswers: ['2'] },
+      { slot: 31, type: 'fill_blank', prompt: 'Cho $a, b$ là các số nguyên thỏa mãn $2 \\le a \\le 2020, 2 \\le b \\le 2020$ và $\\log_a b + 6\\log_b a = 5$. Số cặp $(a, b)$ thỏa mãn là [blank].', correctAnswers: ['54'] },
+      { slot: 32, type: 'true_false', prompt: 'Cho hàm số $f(x)$ có đạo hàm đến cấp hai trên $\\mathbb{R}$, thỏa mãn $(f\'(x))^2 + f(x)\\cdot f\'\'(x) = 20x^4 + 12x^2 + 9, \\forall x \\in \\mathbb{R}$ và $f(0) = 0$. Mỗi phát biểu sau là đúng hay sai?', statements: [
+        { text: '$f(x)\\cdot f\'(x) = 4x^5 + 4x^3 + 9x$.', correct: 'T' },
+        { text: '$f^2(x) = \\dfrac{2}{3}x^6 + x^4 + \\dfrac{9}{2}x^2$.', correct: 'F' }
+      ]},
+      { slot: 33, type: 'true_false', prompt: 'Cho hàm số $y = f(x)$ xác định và liên tục trên $(-\\infty;1)$ và $(1;+\\infty)$, có bảng biến thiên như sau:\n[IMAGE]\nXét tính đúng, sai của các phát biểu sau:', image: svgBBTQ33(), statements: [
+        { text: 'Số tiệm cận đứng của đồ thị hàm số $y = h(x) = \\dfrac{5}{f^2(x) - 4f(x) + 3}$ là 2.', correct: 'T' },
+        { text: 'Số tiệm cận ngang của đồ thị hàm số $y = h(x)$ là 1.', correct: 'T' },
+        { text: 'Tổng số tiệm cận đứng và tiệm cận ngang của đồ thị hàm số $y = h(x)$ là 3.', correct: 'T' }
+      ]},
+      { slot: 34, type: 'fill_blank', prompt: 'Trong không gian $Oxyz$, cho ba điểm $A(1;3;4), B(-1;1;2), C(3;2;-12)$. Cho $M$ là điểm thuộc mặt phẳng $(Oxy)$ thỏa mãn $AM^2 + BM^2 + CM^2 = 174$. Hoành độ của điểm $M$ là [blank], tung độ của điểm $M$ là [blank].', correctAnswers: ['1', '2'] },
+      { slot: 35, type: 'true_false', prompt: 'Cho dãy số $(u_n)$ xác định bởi $u_1 = 5; u_{n+1} = 3u_n - 7, \\forall n \\ge 1$. Các phát biểu sau là đúng hay sai?', statements: [
+        { text: 'Dãy số $(u_n)$ là một cấp số cộng.', correct: 'F' },
+        { text: 'Dãy số $(u_n)$ là một cấp số nhân.', correct: 'F' },
+        { text: 'Đặt $v_n = u_n + \\alpha$. Dãy số $(v_n)$ là một cấp số nhân khi và chỉ khi $\\alpha = \\dfrac{7}{3}$.', correct: 'F' },
+        { text: 'Công thức số hạng tổng quát $u_n = \\dfrac{3^n + 7}{2}$.', correct: 'T' }
+      ]},
+      { slot: 36, type: 'fill_blank', prompt: 'Số các cặp số nguyên dương $(x;y)$ thỏa mãn $1 \\le x \\le 2023$ và $\\ln\\left(\\dfrac{4^x+1}{x}\\right) = \\ln(x+1) - y\\ln 4$ là [blank].', correctAnswers: ['0'] },
+      { slot: 37, type: 'fill_blank', prompt: 'Cho hình hộp $ABCD.A\'B\'C\'D\'$ có $AA\' = a$. Gọi $M, N$ thuộc $BB\'$ và $DD\'$ sao cho $BM = DN = \\dfrac{a}{3}$. Mặt phẳng $(AMN)$ chia khối hộp thành hai phần, gọi $V_1$ là thể tích khối đa diện chứa $A\'$ và $V_2$ là phần còn lại. Tỷ số $\\dfrac{V_1}{V_2}$ bằng [blank].', correctAnswers: ['2'] },
+      { slot: 38, type: 'single', prompt: 'Cho hình chóp đều $S.ABCD$ có cạnh đáy bằng 2, góc giữa mặt bên và mặt đáy bằng $60^\\circ$. Gọi $M, N, P$ lần lượt là trung điểm của $SA, SC$ và $BC$. Thể tích khối tứ diện $DMNP$ bằng:', options: ['$\\dfrac{\\sqrt{110}}{8}$', '$\\dfrac{\\sqrt{3}}{4}$', '$\\dfrac{\\sqrt{110}}{24}$', '$\\dfrac{\\sqrt{6}}{4}$'], correct: 1 },
+      { slot: 39, type: 'single', prompt: 'Một ngày Kylian Mbappé đi bộ dọc theo đường ray tuyến Tramway T3 ở thủ đô Paris và nhận thấy cứ 12 phút lại có một tàu vụt qua mình, cứ 4 phút lại gặp một tàu đi ngược mình. Hỏi cứ bao nhiêu phút thì ở đường Tramway T3 lại có một tàu xuất bến?', options: ['8 phút', '6 phút', '3 phút', '4 phút'], correct: 1 },
+      { slot: 40, type: 'fill_blank', prompt: 'Cho phương trình $m\\sin x + (m-1)\\cos 2x + 5 = 0$ ($m$ là tham số). Số các giá trị nguyên của $m$ để phương trình vô nghiệm là [blank].', correctAnswers: ['4'] }
+    ];
+
+    const QUESTIONS_READING_20 = [
+      { slot: 41, passageHtml: PASSAGE_DOC_1, type: 'true_false', prompt: 'Theo đoạn [2], mỗi thông tin dưới đây là đúng hay sai?', statements: [
+        { text: 'Ông lão có các con và cháu gái.', correct: 'T' },
+        { text: 'Con cháu không sống cùng ông lão.', correct: 'T' },
+        { text: 'Con cháu về thăm ông lão hằng tháng.', correct: 'F' }
+      ]},
+      { slot: 42, passageHtml: PASSAGE_DOC_1, type: 'single', prompt: 'Ông lão chú ý đến nhà hàng xóm vì dãy sáu đôi dép, trong đó có đôi dép xỏ ngón có nơ hồng, xếp ngay ngắn trước cửa.', options: ['Đúng', 'Sai'], correct: 0 },
+      { slot: 43, passageHtml: PASSAGE_DOC_1, type: 'single', prompt: 'Theo đoạn [4], ông lão cảm thấy thế nào khi gặp bà lão trong thang máy với đôi mắt đỏ hoe?', options: ['Bất ngờ, tò mò', 'Kinh ngạc, sửng sốt', 'Xót thương, lo lắng', 'Bỡ ngỡ, khó xử'], correct: 0 },
+      { slot: 44, passageHtml: PASSAGE_DOC_1, type: 'single', prompt: 'Lí do chính khiến ông lão quyết định sang ấn chuông nhà hàng xóm là gì?', options: ['Ông tò mò về sáu đôi dép xếp ngay ngắn trước cửa.', 'Ông muốn làm quen với bà lão để có thêm bạn.', 'Ông băn khoăn về nguyên nhân khiến bà lão khóc.', 'Ông muốn xin bà lão một ấm nước nóng để pha trà.'], correct: 2 },
+      { slot: 45, passageHtml: PASSAGE_DOC_1, type: 'fill_blank', prompt: 'Điền một từ có MỘT tiếng trong đoạn [5] vào chỗ trống:\nPhản ứng của bà lão khi nghe ông lão kể chuyện: [blank].', correctAnswers: ['Lặng'] },
+      { slot: 46, passageHtml: PASSAGE_DOC_1, type: 'single', prompt: 'Chi tiết bà lão hằng ngày sắp xếp và trao đổi những đôi dép ngụ ý điều gì?', options: ['Niềm tin tưởng vào một tương lai sung túc, bình an', 'Sự tẻ nhạt của cuộc sống trong xã hội đô thị', 'Sự mệt mỏi, bế tắc của con người hiện đại', 'Niềm mong ước về một gia đình đủ đầy, hạnh phúc'], correct: 3 },
+      { slot: 47, passageHtml: PASSAGE_DOC_1, type: 'drag_drop', tokens: ['ước mơ', 'cô đơn', 'che giấu', 'mong ngóng', 'hoang mang'], prompt: 'Chọn kéo từ và thả vào vị trí phù hợp:\nCả hai nhân vật ông lão và bà lão đều là những người già, [blank] trong chính căn nhà của mình. Ông lão cả tuần chỉ [blank] đến Chủ nhật để được gặp con cháu. Bà lão chẳng có gì để chờ đợi. Hằng ngày, bà sắp xếp các đôi dép để [blank] nỗi bất hạnh của mình.', correctAnswers: ['cô đơn', 'mong ngóng', 'che giấu'] },
+      { slot: 48, passageHtml: PASSAGE_DOC_1, type: 'drag_drop', tokens: ['sự hi sinh', 'lòng trắc ẩn', 'cuộc sống bế tắc', 'khát khao hạnh phúc'], prompt: 'Chọn kéo các cụm từ và thả vào vị trí phù hợp:\nTruyện "Hàng xóm" phơi bày [blank] của con người trong xã hội hiện đại, đồng thời thể hiện niềm tin vào tình người và [blank]. Sự quan tâm, chia sẻ của ông lão với người hàng xóm, [blank] của hai nhân vật là những ngọn lửa ấm áp trong câu chuyện.', correctAnswers: ['cuộc sống bế tắc', 'lòng trắc ẩn', 'khát khao hạnh phúc'] },
+      { slot: 49, passageHtml: PASSAGE_DOC_1, type: 'single', prompt: 'Kết thúc truyện "Hàng xóm" là một kết thúc có hậu.', options: ['Đúng', 'Sai'], correct: 0 },
+      { slot: 50, passageHtml: PASSAGE_DOC_1, type: 'multiple', prompt: 'Những dòng nào dưới đây nêu đúng thông điệp của văn bản? (Chọn nhiều đáp án đúng)', options: ['Cần xóa bỏ sự khác biệt về nhận thức, tư tưởng giữa thế hệ già - trẻ', 'Cần tôn trọng và bảo vệ quyền riêng tư của mọi người xung quanh', 'Cần yêu thương, giúp đỡ những người già, cô đơn trong xã hội'], correctIndices: [1, 2] },
+
+      { slot: 51, passageHtml: PASSAGE_DOC_2, type: 'single', prompt: 'Mục đích chính của bài viết là gì?', options: ['Lý giải nguyên nhân các ngôn ngữ dân tộc thiểu số nguy cấp và kêu gọi bảo vệ', 'Nhấn mạnh nguy cơ tuyệt chủng ngôn ngữ dân tộc thiểu số và nêu biện pháp bảo vệ', 'Khẳng định sự nguy cấp của ngôn ngữ dân tộc thiểu số và vai trò giáo dục ngôn ngữ', 'Ghi nhận quyền bình đẳng ngôn ngữ và sự sinh tồn của ngôn ngữ dân tộc thiểu số'], correct: 1 },
+      { slot: 52, passageHtml: PASSAGE_DOC_2, type: 'drag_drop', tokens: ['85,6', '54', '53', '90', '14,4'], prompt: 'Kéo thả các số phù hợp vào chỗ trống:\nTheo kết quả điều tra dân số năm 2009, Việt Nam có [blank] dân tộc, trong đó có [blank] % dân tộc thiểu số và có khoảng [blank] ngôn ngữ.', correctAnswers: ['54', '14,4', '90'] },
+      { slot: 53, passageHtml: PASSAGE_DOC_2, type: 'fill_blank', prompt: 'Điền một từ không quá HAI tiếng trong đoạn [2] vào chỗ trống:\nSo với số lượng người nói [blank] thì số lượng người nói ngôn ngữ các dân tộc thiểu số ít hơn nhiều.', correctAnswers: ['tiếng Việt'] },
+      { slot: 54, passageHtml: PASSAGE_DOC_2, type: 'drag_drop', tokens: ['sống tập trung', 'sống rải rác', 'ngôn ngữ dân tộc thiểu số', 'ngôn ngữ dân tộc đa số', 'ngôn ngữ tộc người'], prompt: 'Kéo thả các cụm từ phù hợp vào chỗ trống:\nNguyên nhân chính làm cho số lượng cá thể sử dụng [blank] trong một đơn vị hành chính không cao là do họ [blank] với các dân tộc thiểu số khác, dẫn đến nhiều trẻ em nói thông thạo ngôn ngữ khác hơn so với [blank] của mình. So với số lượng người nói [blank] thì số lượng người nói ngôn ngữ các dân tộc thiểu số ít hơn nhiều.', correctAnswers: ['ngôn ngữ dân tộc thiểu số', 'sống rải rác', 'ngôn ngữ tộc người', 'ngôn ngữ dân tộc đa số'] },
+      { slot: 55, passageHtml: PASSAGE_DOC_2, type: 'single', prompt: 'Theo bài đọc, nhóm các dân tộc thiểu số nào ở Việt Nam hiện nay đã có chữ viết?', options: ['Mông, Tày, Khmer, Nùng, Dao, Chăm, Hoa, Thái', 'Tày, Thái, Hoa, Khmer, Nùng, Mông, Dao, Kinh', 'Chăm, Thái, Tày, Mông, Mày, Sách, A Rem', 'Tày, Thái, Hoa, Khmer, Nùng, Mông, Dao'], correct: 3 },
+      { slot: 56, passageHtml: PASSAGE_DOC_2, type: 'single', prompt: 'Theo đoạn [3], tình trạng sử dụng và bảo tồn ngôn ngữ của các dân tộc thiểu số ở Việt Nam hiện nay như thế nào?', options: ['Dân tộc thiểu số ở Việt Nam biết chữ và viết tiếng mẹ đẻ rất hạn chế.', 'Số lượng dân tộc thiểu số biết sử dụng đồng thời hai ngôn ngữ khiêm tốn.', 'Tất cả các dân tộc thiểu số ở Việt Nam đều sử dụng chữ viết cổ truyền.', 'Ngôn ngữ dân tộc thiểu số dùng trong phạm vi hẹp, không được truyền dạy.'], correct: 0 },
+      { slot: 57, passageHtml: PASSAGE_DOC_2, type: 'fill_blank', prompt: 'Điền một cụm từ có BA tiếng từ bài đọc vào chỗ trống:\nTheo Hiến pháp Việt Nam, [blank] của các dân tộc thiểu số luôn được Nhà nước Việt Nam thừa nhận và đảm bảo về mặt pháp lí quyền bình đẳng ngôn ngữ.', correctAnswers: ['tiếng mẹ đẻ'] },
+      { slot: 58, passageHtml: PASSAGE_DOC_2, type: 'single', prompt: 'Theo đoạn [5], đa số các ngôn ngữ dân tộc thiểu số ở Việt Nam thuộc loại suy yếu, nguy cấp và hầu như chỉ còn trong kí ức.', options: ['Đúng', 'Sai'], correct: 0 },
+      { slot: 59, passageHtml: PASSAGE_DOC_2, type: 'single', prompt: 'Theo bài đọc, giữa các lứa tuổi sử dụng ngôn ngữ dân tộc thiểu số có sự phân biệt và xung đột vì mất đi ngôn ngữ dẫn đến mất mát văn hóa và danh tính dân tộc.', options: ['Đúng', 'Sai'], correct: 1 },
+      { slot: 60, passageHtml: PASSAGE_DOC_2, type: 'drag_drop', tokens: ['văn tự', 'phạm vi', 'lưu giữ', 'hoạt động cộng đồng', 'giáo dục'], prompt: 'Kéo thả các từ phù hợp vào chỗ trống:\nTheo bài đọc, điều kiện tồn tại của một ngôn ngữ dân tộc thiểu số là ngôn ngữ đó phải được [blank] qua nhiều thế hệ, được sử dụng trong nhiều [blank], có [blank], có [blank] chính thức và có chính sách ngôn ngữ phù hợp.', correctAnswers: ['giáo dục', 'phạm vi', 'hoạt động cộng đồng', 'văn tự'] }
+    ];
+
+    const QUESTIONS_SCIENCE_40 = [
+      { slot: 61, passageHtml: PASSAGE_SCI_1, type: 'fill_blank', prompt: 'Máu là một mô liên kết gồm: các thành phần [blank] chiếm 45% thể tích và huyết tương chiếm [blank] % thể tích của máu.', correctAnswers: ['tế bào', '55'] },
+      { slot: 62, passageHtml: PASSAGE_SCI_1, type: 'drag_drop', tokens: ['Bảo vệ cơ thể', 'Tham gia quá trình đông máu', 'Vận chuyển O2'], prompt: 'Kéo các chức năng vào ô tương ứng với loại thành phần trong máu đảm nhiệm:\n• Hồng cầu: [blank]\n• Bạch cầu: [blank]\n• Tiểu cầu: [blank]', correctAnswers: ['Vận chuyển O2', 'Bảo vệ cơ thể', 'Tham gia quá trình đông máu'] },
+      { slot: 63, passageHtml: PASSAGE_SCI_1, type: 'single', prompt: 'Lựa chọn thứ tự các yếu tố hình thành trong quá trình đông máu theo thời gian trong các phương án dưới đây:', options: ['Prothrombin → Thrombin → Fibrin → Lưới fibrin', 'Fibrin → Thrombin → Prothrombin → Lưới fibrin', 'Prothrombin → Fibrin → Thrombin → Lưới fibrin', 'Thrombin → Prothrombin → Fibrin → Lưới fibrin'], correct: 0 },
+      { slot: 64, passageHtml: PASSAGE_SCI_1, type: 'single', prompt: 'Cơ chế nào sau đây mà thuốc chống đông máu có thể tác động để hạn chế sự hình thành cục máu đông?', options: ['Tăng cường quá trình tiêu Fibrin.', 'Hoạt hóa Fibrinogen', 'Tăng cường quá trình tập kết tiểu cầu.', 'Hoạt hóa Prothrombin'], correct: 0 },
+      { slot: 65, passageHtml: PASSAGE_SCI_1, type: 'multiple', prompt: 'Những thành phần nào sau đây trong máu nếu bị giảm số lượng hoặc thay đổi tính chất hóa học có thể khiến cho quá trình đông máu bị rối loạn, dẫn tới mất nhiều máu khi bị thương?', options: ['Tiểu cầu', 'Hồng cầu', 'Huyết tương', 'Bạch cầu'], correctIndices: [0, 2] },
+      { slot: 66, passageHtml: PASSAGE_SCI_1, type: 'single', prompt: 'Nguyên nhân nào sau đây khiến người bị bệnh máu khó đông (Hemophilia - thiếu yếu tố đông máu) khó cầm máu?', options: ['Thiếu yếu tố gây đông máu khiến thrombin hình thành từ yếu tố khác prothrombin.', 'Thiếu yếu tố gây đông máu khiến quá trình chuyển hóa prothrombin thành thrombin không xảy ra, dẫn tới khó hình thành lưới fibrin.', 'Thiếu yếu tố gây đông máu khiến tiểu cầu lân cận không dính lại với nhau.', 'Thiếu yếu tố gây đông máu khiến fibrinogen sau khi được hình thành bị biến đổi cấu trúc hóa học.'], correct: 1 },
+
+      { slot: 67, passageHtml: PASSAGE_SCI_2, type: 'multiple', prompt: 'Những nhận định nào sau đây đúng khi nói về điện phân?', options: ['Xảy ra phản ứng oxi hoá - khử để tạo thành chất mới.', 'Xảy ra khi có tác động của dòng điện xoay chiều.', 'Quá trình oxi hoá xảy ra trên điện cực dương.', 'Thực hiện với chất điện li nóng chảy hoặc dung dịch điện li.'], correctIndices: [0, 2, 3] },
+      { slot: 68, passageHtml: PASSAGE_SCI_2, type: 'fill_blank', prompt: 'Chọn từ trong ngoặc phù hợp điền vào ô trống:\nKhi điện phân dung dịch NaCl, thì ion $\\text{Na}^+$ sẽ di chuyển về cực (âm/dương) [blank] hay còn gọi là (anot/catot) [blank]. Còn ion $\\text{Cl}^-$ sẽ di chuyển về cực (âm/dương) [blank] hay còn gọi là (anot/catot) [blank].', correctAnswers: ['âm', 'catot', 'dương', 'anot'] },
+      { slot: 69, passageHtml: PASSAGE_SCI_2, type: 'fill_blank', prompt: 'Trong điện phân, quá trình oxi hoá và khử lần lượt xảy ra tại điện cực [blank] và điện cực [blank].', correctAnswers: ['dương', 'âm'] },
+      { slot: 70, passageHtml: PASSAGE_SCI_2, type: 'single', prompt: 'Muốn điều chế NaOH bằng cách điện phân dung dịch NaCl thì phải có màng ngăn để ngăn phản ứng của cặp chất nào sau đây?', options: ['NaOH với Cl2', 'NaOH với H2', 'NaCl với Cl2', 'H2 với Cl2'], correct: 0 },
+      { slot: 71, passageHtml: PASSAGE_SCI_2, type: 'single', prompt: 'Nhận định sau đây đúng hay sai? "Trong cùng một thời gian điện phân, nếu dòng điện có cường độ càng cao thì khối lượng sinh ra ở các điện cực càng lớn."', options: ['Sai', 'Đúng'], correct: 1 },
+      { slot: 72, passageHtml: PASSAGE_SCI_2, type: 'single', prompt: 'Khi điện phân NaCl có màng ngăn thì trên cực âm đã xảy ra quá trình khử của chất/ion nào?', options: ['H2O', 'Cl-', 'Na+', 'Na+ và H2O'], correct: 0 },
+      { slot: 73, passageHtml: PASSAGE_SCI_2, type: 'fill_blank', prompt: 'Điện phân NaCl có màng ngăn, điện cực trơ với cường độ dòng điện là $1,61\\text{ A}$ trong 60 phút thì số gam đơn chất thu được trên điện cực catot là [blank] (lấy đến 2 chữ số sau dấu phẩy).', correctAnswers: ['0,06'] },
+
+      { slot: 74, passageHtml: PASSAGE_SCI_3, type: 'single', prompt: 'Theo mô hình giọt chất lỏng, một hạt nhân khó có thể xảy ra phản ứng phân rã trong điều kiện nào sau đây?', options: ['Khi hạt nhân có dạng hình cầu.', 'Khi hạt nhân có dạng hình ellip.', 'Khi các nucleon của hạt nhân lấp đầy các lớp vỏ.', 'Khi các nucleon của hạt nhân chỉ chiếm chỗ một phần trong các lớp vỏ.'], correct: 0 },
+      { slot: 75, passageHtml: PASSAGE_SCI_3, type: 'single', prompt: 'Theo mô tả của mô hình vỏ hạt nhân, một hạt nhân gồm 8 proton và 9 neutron là hạt nhân không có số neutron thần kỳ vì:', options: ['Một lớp vỏ chứa neutron, nhưng số lượng không đạt cực đại.', 'Không có lớp vỏ nào chứa số lượng neutron cực đại.', 'Nhiều lớp vỏ không chứa neutron nào.', 'Chỉ duy nhất một lớp vỏ chứa số neutron cực đại.'], correct: 0 },
+      { slot: 76, passageHtml: PASSAGE_SCI_3, type: 'single', prompt: 'Theo mô hình vỏ hạt nhân, một hạt nhân có chứa 8 neutron thì có thể có tối đa bao nhiêu lớp vỏ được điền đầy bởi neutron?', options: ['4', '2', '3', '1'], correct: 1 },
+      { slot: 77, passageHtml: PASSAGE_SCI_3, type: 'drag_drop', tokens: ['3', '6', '2', '7'], prompt: 'Theo mô hình vỏ hạt nhân, hạt nhân sẽ có dạng hình cầu nếu có số proton và số neutron trong hai lớp vỏ đầu tiên tương ứng bằng:\n• Lớp vỏ 1: [blank]\n• Lớp vỏ 2: [blank]', correctAnswers: ['2', '6'] },
+      { slot: 78, passageHtml: PASSAGE_SCI_3, type: 'multiple', prompt: 'Dựa theo Mô hình vỏ hạt nhân, lựa chọn những hạt nhân thần kì kép (cả số Z và số N đều là số magic) trong số các đồng vị hạt nhân sau:', options: ['$^{40}_{20}\\text{Ca}$', '$^{208}_{82}\\text{Pb}$', '$^{12}_{6}\\text{C}$', '$^{28}_{14}\\text{Ni}$', '$^{92}_{42}\\text{Mo}$', '$^{16}_{8}\\text{O}$'], correctIndices: [0, 1, 5] },
+      { slot: 79, passageHtml: PASSAGE_SCI_3, type: 'single', prompt: 'Người ủng hộ mô hình vỏ hạt nhân có thể sử dụng bằng chứng nào sau đây để bác bỏ quan điểm của mô hình giọt chất lỏng?', options: ['Va chạm với các hạt nucleon năng lượng cao có thể khiến cho hạt nhân bị phân rã.', 'Một số hạt nhân có dạng hình cầu.', 'Hạt neutron năng lượng thấp có thể xuyên qua hạt nhân của nhiều nguyên tố khác nhau, mà không làm biến đổi hạt nhân.'], correct: 2 },
+      { slot: 80, passageHtml: PASSAGE_SCI_3, type: 'single', prompt: 'Trong một số ngôi sao, một hạt nhân Heli kết hợp với một hạt nhân Bery hình thành hạt nhân Carbon. Theo mô hình giọt chất lỏng, sự hình thành hạt nhân Carbon như vậy có thể so sánh với:', options: ['Sự phân rã của 2 giọt chất lỏng.', 'Sự kết hợp của hai giọt chất lỏng.', 'Quá trình giải phóng một phần từ giọt chất lỏng.', 'Sự phân rã của 1 giọt chất lỏng.'], correct: 1 },
+
+      { slot: 81, passageHtml: PASSAGE_SCI_4, type: 'single', prompt: 'Đối với sự truyền sáng qua lăng kính trong Hình 1, nhận định nào sau đây là SAI?', options: ['Tia JR là tia khúc xạ.', 'Xét hiện tượng khúc xạ tại điểm I, r1 là góc khúc xạ.', 'Xét hiện tượng khúc xạ tại điểm J, r2 là góc khúc xạ.', 'Tia IJ vừa là tia khúc xạ vừa là tia tới.'], correct: 2 },
+      { slot: 82, passageHtml: PASSAGE_SCI_4, type: 'true_false', prompt: 'Dựa vào kết quả thí nghiệm 1, nhận xét nào sau đây là đúng hay sai?', statements: [
+        { text: 'Tia đỏ bị lệch ít nhất trong ba tia.', correct: 'T' },
+        { text: 'Tia lam bị lệch nhiều nhất trong ba tia.', correct: 'T' },
+        { text: 'Góc lệch của ba tia đỏ, lục, lam khi truyền qua lăng kính như nhau.', correct: 'F' }
+      ]},
+      { slot: 83, passageHtml: PASSAGE_SCI_4, type: 'single', prompt: 'Khi chiếu ánh sáng vào lăng kính có $A = 60^\\circ$, sao cho góc $i_1 = i_2$, $n = \\sqrt{2}$. Góc lệch $D$ là:', options: ['$60^\\circ$', '$45^\\circ$', '$90^\\circ$', '$30^\\circ$'], correct: 3 },
+      { slot: 84, passageHtml: PASSAGE_SCI_4, type: 'true_false', prompt: 'Xét phương truyền của tia sáng qua lăng kính đặt trong không khí ($n > 1$):', statements: [
+        { text: 'Tia sáng luôn bị lệch về phía đáy của lăng kính.', correct: 'T' },
+        { text: 'Tia sáng bị lệch về phía đỉnh góc chiết quang A của lăng kính.', correct: 'F' }
+      ]},
+      { slot: 85, passageHtml: PASSAGE_SCI_4, type: 'multiple', prompt: 'Những nhận xét nào dưới đây là đúng trong trường hợp góc lệch bằng góc lệch cực tiểu $D_{\\min}$?', options: ['Tia sáng tới và tia sáng ra khỏi lăng kính đối xứng nhau qua đường phân giác góc A.', '$D_{\\min} = 2i - A$', 'Góc lệch cực tiểu không phụ thuộc vào n.', 'Góc lệch cực tiểu của mọi lăng kính đặt trong không khí là như nhau.'], correctIndices: [0, 1] },
+      { slot: 86, passageHtml: PASSAGE_SCI_4, type: 'single', prompt: 'Một lăng kính có góc chiết quang $60^\\circ$ đặt trong không khí có góc lệch cực tiểu với tia sáng màu đỏ bằng $30^\\circ$. Khi sử dụng tia màu lam chiếu vào lăng kính đó, nhận xét nào dưới đây là đúng?', options: ['Góc lệch cực tiểu với tia màu lam bằng 30°.', 'Góc lệch cực tiểu với tia màu lam nhỏ hơn 30°.', 'Góc lệch cực tiểu với tia màu lam bằng 60°.', 'Góc lệch cực tiểu với tia màu lam lớn hơn 30°.'], correct: 3 },
+      { slot: 87, passageHtml: PASSAGE_SCI_4, type: 'single', prompt: 'Nếu sử dụng ánh sáng trắng chiếu vào lăng kính, khi ánh sáng khúc xạ qua hai mặt bên và ló ra khỏi lăng kính, nhận định nào sau đây đúng?', options: ['Màu lục lệch nhiều hơn màu lam, màu đỏ.', 'Màu đỏ lệch nhiều hơn màu lam, màu lục.', 'Ánh sáng trắng không bị tách thành các màu.', 'Màu lam lệch nhiều hơn màu đỏ, màu lục.'], correct: 3 },
+
+      { slot: 88, passageHtml: PASSAGE_SCI_5, type: 'fill_blank', prompt: 'Khi khối lượng phân tử aren tăng, đại lượng vật lí biến đổi có quy luật rõ ràng nhất (tăng đều) là [blank].', correctAnswers: ['nhiệt độ sôi'] },
+      { slot: 89, passageHtml: PASSAGE_SCI_5, type: 'single', prompt: 'Trong các aren trên, ở nhiệt độ phòng ($25^\\circ\\text{C}$), có bao nhiêu aren ở thể lỏng?', options: ['4', 'Không có', '3', '1'], correct: 0 },
+      { slot: 90, passageHtml: PASSAGE_SCI_5, type: 'single', prompt: 'Khối lượng phân tử các aren trong bảng thỏa mãn công thức $78 + 14n$ trong đó $n$ là một số tự nhiên.', options: ['Sai', 'Đúng'], correct: 1 },
+      { slot: 91, passageHtml: PASSAGE_SCI_5, type: 'single', prompt: 'Một loại dầu có chứa toluen ($0,867\\text{ g/cm}^3$) và benzen ($0,879\\text{ g/cm}^3$). Khối lượng riêng của hỗn hợp này là $0,871\\text{ g/cm}^3$. Tỉ lệ về thể tích giữa benzen và toluen trong hỗn hợp trên là bao nhiêu?', options: ['3:7', '3:1', '2:3', '1:2'], correct: 3 },
+      { slot: 92, passageHtml: PASSAGE_SCI_5, type: 'fill_blank', prompt: 'Theo tiêu chuẩn Việt Nam, tổng lượng metanol trong 1 lít rượu vodka $35^\\circ$ không được phép vượt quá [blank] mg.', correctAnswers: ['700'] },
+      { slot: 93, passageHtml: PASSAGE_SCI_5, type: 'single', prompt: 'Biết nguyên tử khối của $\\text{C} = 12; \\text{H} = 1; \\text{O} = 16$. Phân tử khối của metanol ($\\text{CH}_3\\text{OH}$) là:', options: ['46', '32', '74', '60'], correct: 1 },
+      { slot: 94, passageHtml: PASSAGE_SCI_5, type: 'multiple', prompt: 'Những phát biểu nào sau đây đúng?', options: ['Đun nóng rượu trước khi uống có thể làm giảm lượng độc tố metanol.', 'Có thể làm giảm lượng độc tố metanol bằng cách chưng cất nhiều lần và bỏ phần rượu đầu.', 'Sản xuất rượu từ mật mía sẽ thu được rượu chứa ít metanol hơn so với sản xuất rượu từ cây mía.', 'Phân tử etanol chỉ có 1 nguyên tử H linh động.'], correctIndices: [1, 2, 3] },
+
+      { slot: 95, passageHtml: PASSAGE_SCI_6, type: 'single', prompt: 'Khi nói về cấu tạo của ti thể, phát biểu nào sau đây KHÔNG đúng?', options: ['Ti thể có thể tự tổng hợp được một số protein của ti thể.', 'Ti thể là bào quan có hệ DNA riêng, khác với DNA trong nhân.', 'Ti thể được cấu tạo bởi một lớp màng phospholipid kép.', 'Ti thể có màng trong gấp nếp, không căng phẳng.'], correct: 2 },
+      { slot: 96, passageHtml: PASSAGE_SCI_6, type: 'fill_blank', prompt: 'Các chuỗi truyền điện tử (electron) nằm trên [blank] ti thể. Khi điện tử được vận chuyển từ NADH tới oxygen sẽ đồng thời vận chuyển $\\text{H}^+$ vào không gian giữa hai màng làm cho nồng độ $\\text{H}^+$ ở chất nền [blank] so với không gian giữa hai màng.', correctAnswers: ['màng trong', 'thấp hơn'] },
+      { slot: 97, passageHtml: PASSAGE_SCI_6, type: 'true_false', prompt: 'Tiến hành thí nghiệm với ti thể đặt trong dung dịch chứa NADH và bổ sung một lượng nhỏ $\\text{O}_2$. Khi nói về kết quả thu được, những nhận định sau đây đúng hay sai?', statements: [
+        { text: 'Khi oxygen được thêm vào, pH trong dung dịch quanh ti thể giảm rất nhanh (nồng độ H+ tăng vọt).', correct: 'T' },
+        { text: 'O2 trực tiếp phân giải NADH tạo ra H+ trong dung dịch.', correct: 'F' },
+        { text: 'Trong dung dịch sự thay đổi nồng độ H+ không liên quan đến vai trò của ti thể.', correct: 'F' },
+        { text: 'Khi có O2 xảy ra sự oxy hoá NADH kết hợp vận chuyển H+ ra ngoài. Khi O2 hết thì H+ từ từ quay trở lại ti thể.', correct: 'T' }
+      ]},
+      { slot: 98, passageHtml: PASSAGE_SCI_6, type: 'single', prompt: 'Cyanide là chất ức chế phức hệ IV của chuỗi vận chuyển electron trên màng ti thể. Hậu quả của việc ngộ độc cyanide đối với tế bào là:', options: ['Tăng cường tiêu thụ O2.', 'Tạo ra sự chênh lệch nồng độ H+ lớn hơn.', 'Làm thủng màng ti thể.', 'Làm ngừng trệ quá trình tổng hợp ATP trên màng trong ti thể.'], correct: 3 },
+      { slot: 99, passageHtml: PASSAGE_SCI_6, type: 'single', prompt: 'Màng trong của ti thể KHÔNG có cấu trúc nào sau đây?', options: ['Các bơm proton.', 'Các ribosome 70S.', 'Các kênh ATP synthase.', 'Các phức hệ vận chuyển điện tử.'], correct: 1 },
+      { slot: 100, passageHtml: PASSAGE_SCI_6, type: 'drag_drop', tokens: ['(1)', '(2)', '(3)', '(4)', '(5)'], prompt: 'Các thành phần cấu tạo của ti thể tương ứng với các vị trí (1) Màng trong, (2) Chất nền, (3) Ribosome, (4) Khoảng không gian hai màng, (5) Phân tử DNA là:\n• Ribosome ứng với: [blank]\n• Màng trong ứng với: [blank]\n• Phân tử DNA ứng với: [blank]\n• Khoảng không gian hai màng ứng với: [blank]\n• Chất nền ứng với: [blank]', correctAnswers: ['(3)', '(1)', '(5)', '(4)', '(2)'] }
+    ];
+
+    function buildDefaultExams() {
+      return [
+        {
+          id: 'tsa_de_02_full',
+          group: 'tsa',
+          title: '[HSA-EDU-TSA01] ĐỀ THI TSA BÁCH KHOA HÀ NỘI SỐ 02 - ĐỀ TỔNG HỢP (100 CÂU)',
+          subject: 'Đề tổng hợp TSA',
+          duration: 150,
+          totalSlots: 100,
+          questions: [...QUESTIONS_MATH_40, ...QUESTIONS_READING_20, ...QUESTIONS_SCIENCE_40]
+        },
+        {
+          id: 'tsa_de_02_math',
+          group: 'tsa',
+          title: '[HSA-EDU-TSA01] ĐỀ SỐ 02 - PHẦN I: TƯ DUY TOÁN HỌC (Câu 1 - 40)',
+          subject: 'Tư duy Toán học',
+          duration: 60,
+          totalSlots: 40,
+          questions: QUESTIONS_MATH_40
+        },
+        {
+          id: 'tsa_de_02_reading',
+          group: 'tsa',
+          title: '[HSA-EDU-TSA01] ĐỀ SỐ 02 - PHẦN II: TƯ DUY ĐỌC HIỂU (Câu 41 - 60)',
+          subject: 'Tư duy Đọc hiểu',
+          duration: 30,
+          totalSlots: 60,
+          questions: QUESTIONS_READING_20
+        },
+        {
+          id: 'tsa_de_02_science',
+          group: 'tsa',
+          title: '[HSA-EDU-TSA01] ĐỀ SỐ 02 - PHẦN III: KHOA HỌC & GIẢI QUYẾT VẤN ĐỀ (Câu 61 - 100)',
+          subject: 'Tư duy Khoa học',
+          duration: 60,
+          totalSlots: 100,
+          questions: QUESTIONS_SCIENCE_40
+        }
+      ];
+    }
+
+    // ================= QUẢN LÝ TRẠNG THÁI =================
+    let exams = JSON.parse(localStorage.getItem('tsa_v3_exams') || 'null');
+    if (!exams || exams.length === 0) {
+      exams = buildDefaultExams();
+      localStorage.setItem('tsa_v3_exams', JSON.stringify(exams));
+    }
+
+    let resources = JSON.parse(localStorage.getItem('tsa_v3_resources') || '[]');
+    let currentFilterTsa = 'ALL';
+    let uploadingResType = 'doc';
+
+    // Biến phòng thi
+    let activeExam = null;
+    let activeSlotNumber = 1;
+    let currentRenderedPassage = null;
+    let userResponses = {};
+    let flaggedSlots = {};
+    let remainingSeconds = 0;
+    let questionSeconds = 0;
+    let examInterval = null;
+
+    // Biến phục vụ Kéo thả (Floating Drag + Click)
+    let pickedTokenState = null;
+    let pointerDragState = null;
+
+    function persistExams() {
+      localStorage.setItem('tsa_v3_exams', JSON.stringify(exams));
+    }
+
+    function resetDefaultExams() {
+      exams = buildDefaultExams();
+      persistExams();
+      renderAllLists();
+    }
+
+    function switchPortalTab(tab) {
+      ['tsa', 'other', 'docs', 'books'].forEach(t => {
+        document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+        document.getElementById('section-' + t).style.display = (t === tab) ? 'block' : 'none';
+      });
+      renderAllLists();
+    }
+
+    function filterExams(group, sub, btn) {
+      document.querySelectorAll('#tsaSubFilter .chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilterTsa = sub;
+      renderAllLists();
+    }
+
+    function renderAllLists() {
+      renderExamSection('tsa', 'tsaExamList', currentFilterTsa);
+      renderExamSection('other', 'otherExamList', 'ALL');
+      renderResourceSection('doc', 'docsList');
+      renderResourceSection('book', 'booksList');
+    }
+
+    function renderExamSection(group, containerId, filterSub) {
+      const container = document.getElementById(containerId);
+      const list = exams.filter(e => e.group === group && (filterSub === 'ALL' || e.subject === filterSub));
+
+      if (list.length === 0) {
+        container.innerHTML = `<div style="background:#fff; border:1px dashed #cbd5e1; border-radius:8px; padding:36px; text-align:center; color:#64748b;">Chưa có đề thi nào trong mục này. Bấm <strong>"⚡ Chuyển nhanh PDF / Text sang JSON"</strong> để thêm đề mới.</div>`;
+        return;
+      }
+
+      container.innerHTML = `<div class="grid-list">` + list.map(ex => `
+        <div class="card-item">
+          <div>
+            <span class="card-tag">${ex.subject}</span>
+            <div class="card-title">${ex.title}</div>
+            <div class="card-meta">
+              <span>⏱ Thời gian: ${ex.duration} phút</span>
+              <span>📋 Số lượng: ${ex.questions.length} câu hỏi</span>
+            </div>
+          </div>
+          <div class="btn-group" style="justify-content:flex-end;">
+            <button class="btn" onclick="exportExamJson('${ex.id}')">Tải .JSON</button>
+            <button class="btn btn-danger" onclick="deleteExam('${ex.id}')">Xóa</button>
+            <button class="btn btn-primary" onclick="startExam('${ex.id}')">Vào phòng thi &#10095;</button>
+          </div>
+        </div>
+      `).join('') + `</div>`;
+    }
+
+    function renderResourceSection(type, containerId) {
+      const container = document.getElementById(containerId);
+      const list = resources.filter(r => r.type === type);
+      if (list.length === 0) {
+        container.innerHTML = `<div style="background:#fff; border:1px dashed #cbd5e1; border-radius:8px; padding:36px; text-align:center; color:#64748b;">Chưa có file nào. Bấm nút tải lên ở góc phải để lưu trữ tài liệu.</div>`;
+        return;
+      }
+      container.innerHTML = `<div class="grid-list">` + list.map(item => `
+        <div class="card-item">
+          <div>
+            <span class="card-tag">${item.category || 'Tài liệu'}</span>
+            <div class="card-title">${item.title}</div>
+            <div class="card-meta"><span>File: ${item.mainFileName || 'Đính kèm'}</span></div>
+          </div>
+          <div class="btn-group" style="justify-content:flex-end;">
+            ${item.mainFileUrl ? `<a class="btn btn-primary" href="${item.mainFileUrl}" download="${item.mainFileName}">Tải xuống</a>` : ''}
+            <button class="btn btn-danger" onclick="deleteResource('${item.id}')">Xóa</button>
+          </div>
+        </div>
+      `).join('') + `</div>`;
+    }
+
+    // ================= LOGIC PHÒNG THI CBT (1 CỘT & 2 CỘT + KÉO THẢ MƯỢT MÀ) =================
+    function startExam(examId) {
+      const ex = exams.find(e => e.id === examId);
+      if (!ex) return;
+
+      activeExam = ex;
+      userResponses = {};
+      flaggedSlots = {};
+      remainingSeconds = ex.duration * 60;
+      questionSeconds = 0;
+      pickedTokenState = null;
+      currentRenderedPassage = null;
+
+      activeSlotNumber = ex.questions.length > 0 ? ex.questions[0].slot : 1;
+
+      document.getElementById('cbtCandidateName').textContent = document.getElementById('candidateNameInput').value || 'HUYNH QUOC THANG';
+      document.getElementById('cbtExamTitle').textContent = ex.title;
+
+      document.getElementById('portalView').style.display = 'none';
+      document.getElementById('examRoomView').style.display = 'flex';
+
+      const firstQ = getQuestionBySlot(activeSlotNumber);
+      toggleRightSidebar(!(firstQ && firstQ.passageHtml));
+
+      renderCbtWorkspace(true);
+      renderCbtSidebar();
+
+      if (examInterval) clearInterval(examInterval);
+      examInterval = setInterval(() => {
+        remainingSeconds--;
+        questionSeconds++;
+        updateClocks();
+        if (remainingSeconds <= 0) {
+          clearInterval(examInterval);
+          submitCurrentExam(true);
+        }
+      }, 1000);
+      updateClocks();
+    }
+
+    function toggleRightSidebar(open) {
+      const sb = document.getElementById('cbtRightSidebar');
+      const mini = document.getElementById('collapsedBottomControls');
+      if (open) {
+        sb.classList.remove('collapsed');
+        mini.style.display = 'none';
+      } else {
+        sb.classList.add('collapsed');
+        mini.style.display = 'flex';
+      }
+    }
+
+    function updateClocks() {
+      const rmMin = Math.floor(Math.max(0, remainingSeconds) / 60);
+      const rmSec = Math.max(0, remainingSeconds) % 60;
+      const str = String(rmMin).padStart(2, '0') + ':' + String(rmSec).padStart(2, '0');
+      document.getElementById('cbtRemainingClock').textContent = str;
+      document.getElementById('cbtRemainingClockMini').textContent = str;
+
+      const qMin = Math.floor(questionSeconds / 60);
+      const qSec = questionSeconds % 60;
+      document.getElementById('currentQuestionTimer').textContent = qMin + ':' + String(qSec).padStart(2, '0');
+    }
+
+    function getQuestionBySlot(slotNum) {
+      if (!activeExam) return null;
+      return activeExam.questions.find(q => q.slot === slotNum) || null;
+    }
+
+    function isSlotAnswered(slotNum) {
+      const ans = userResponses[slotNum];
+      if (ans === undefined || ans === null) return false;
+      if (typeof ans === 'number') return true;
+      if (Array.isArray(ans)) return ans.some(v => v !== undefined && v !== null && String(v).trim() !== '');
+      if (typeof ans === 'object') return Object.keys(ans).length > 0;
+      return false;
+    }
+
+    // Tìm câu đích khi bấm nút "<" hoặc "Câu tiếp >"
+    // - Nếu đang ở phần Đọc hiểu / Khoa học (có passageHtml): Chuyển thẳng sang Văn bản mới (VD: 41-50 -> 51-60)
+    // - Nếu đang ở phần Toán (1 cột): Chuyển từng câu như bình thường
+    function getTargetSlotForNavigation(delta) {
+      if (!activeExam || !activeExam.questions.length) return null;
+      const questions = activeExam.questions;
+      const currIdx = questions.findIndex(q => q.slot === activeSlotNumber);
+      if (currIdx === -1) return null;
+
+      const currQ = questions[currIdx];
+
+      if (currQ.passageHtml) {
+        if (delta > 0) {
+          for (let i = currIdx + 1; i < questions.length; i++) {
+            if (questions[i].passageHtml !== currQ.passageHtml) {
+              return questions[i].slot;
+            }
+          }
+          return null;
+        } else {
+          let prevIdx = -1;
+          for (let i = currIdx - 1; i >= 0; i--) {
+            if (questions[i].passageHtml !== currQ.passageHtml) {
+              prevIdx = i;
+              break;
+            }
+          }
+          if (prevIdx === -1) return null;
+          const prevPassage = questions[prevIdx].passageHtml;
+          if (prevPassage) {
+            while (prevIdx > 0 && questions[prevIdx - 1].passageHtml === prevPassage) {
+              prevIdx--;
+            }
+          }
+          return questions[prevIdx].slot;
+        }
+      } else {
+        const nextIdx = currIdx + delta;
+        if (nextIdx >= 0 && nextIdx < questions.length) {
+          return questions[nextIdx].slot;
+        }
+        return null;
+      }
+    }
+
+    function updateNavButtonsState() {
+      const prevBtn = document.getElementById('btnPrevQ');
+      const nextBtn = document.getElementById('btnNextQ');
+      if (prevBtn) prevBtn.disabled = (getTargetSlotForNavigation(-1) === null);
+      if (nextBtn) nextBtn.disabled = (getTargetSlotForNavigation(1) === null);
+    }
+
+    function renderCbtSidebar() {
+      const slots = activeExam.questions.map(q => q.slot);
+      const grid = document.getElementById('cbtPaletteGrid');
+      let answeredCount = 0;
+
+      grid.innerHTML = slots.map(s => {
+        const done = isSlotAnswered(s);
+        if (done) answeredCount++;
+        const cls = ['palette-circle'];
+        if (done) cls.push('answered');
+        if (flaggedSlots[s]) cls.push('flagged');
+        if (s === activeSlotNumber) cls.push('current');
+        return `<button class="${cls.join(' ')}" onclick="jumpToSlot(${s})">${s}</button>`;
+      }).join('');
+
+      const total = slots.length;
+      document.getElementById('cbtCompletedText').textContent = `${answeredCount}/${total}`;
+      const pct = total > 0 ? Math.round((answeredCount / total) * 100) : 0;
+      document.getElementById('cbtProgressFill').style.width = pct + '%';
+      document.getElementById('cbtProgressPercent').textContent = pct + '%';
+      updateNavButtonsState();
+    }
+
+    function jumpToSlot(slotNum) {
+      const targetQ = getQuestionBySlot(slotNum);
+      if (!targetQ) return;
+
+      const isSamePassage = targetQ.passageHtml && currentRenderedPassage === targetQ.passageHtml && document.querySelector('.split-col-card');
+      activeSlotNumber = slotNum;
+      questionSeconds = 0;
+      pickedTokenState = null;
+      updateClocks();
+
+      if (isSamePassage) {
+        renderCbtSidebar();
+        const block = document.getElementById('q-block-' + slotNum);
+        if (block) block.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        renderCbtWorkspace(true);
+        renderCbtSidebar();
+        const block = document.getElementById('q-block-' + slotNum);
+        if (block) block.scrollIntoView({ behavior: 'auto', block: 'start' });
+      }
+    }
+
+    function navigateQuestion(delta) {
+      const targetSlot = getTargetSlotForNavigation(delta);
+      if (targetSlot !== null) {
+        jumpToSlot(targetSlot);
+      }
+    }
+
+    // Chỉ cập nhật đúng 1 câu hỏi khi người dùng chọn/kéo thả đáp án -> Giữ nguyên 100% vị trí cuộn của cột phải
+    function rerenderSingleQuestionBlock(slotNum) {
+      const q = getQuestionBySlot(slotNum);
+      const existingBlock = document.getElementById('q-block-' + slotNum);
+      if (!q || !existingBlock) {
+        renderCbtWorkspace(false);
+        return;
+      }
+
+      const rightCol = document.querySelector('.split-right-questions');
+      const savedScrollTop = rightCol ? rightCol.scrollTop : 0;
+
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = buildQuestionItemHtml(q).trim();
+      const newBlock = wrapper.firstElementChild;
+      existingBlock.replaceWith(newBlock);
+
+      if (rightCol) rightCol.scrollTop = savedScrollTop;
+
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise([newBlock]);
+      }
+      updateNavButtonsState();
+    }
+
+    function toggleBookmarkSlot(slotNum) {
+      flaggedSlots[slotNum] = !flaggedSlots[slotNum];
+      rerenderSingleQuestionBlock(slotNum);
+      renderCbtSidebar();
+    }
+
+    function buildQuestionItemHtml(q) {
+      const s = q.slot;
+      let inner = '';
+      if (q.instruction) {
+        inner += `<div style="font-style:italic; color:#334155; margin-bottom:6px;">${q.instruction}</div>`;
+      }
+
+      // (4) Kéo thả
+      if (q.type === 'drag_drop') {
+        const currentArr = userResponses[s] || [];
+        const availableTokens = (q.tokens || []).filter(t => !currentArr.includes(t));
+
+        inner += `<div class="drag-bank-box" data-bank-slot="${s}">`;
+        availableTokens.forEach(tok => {
+          const isPicked = pickedTokenState && pickedTokenState.slot === s && pickedTokenState.value === tok;
+          const safeTok = encodeURIComponent(tok);
+          inner += `<span class="drag-chip ${isPicked ? 'picked' : ''}" onpointerdown="startChipPointerDrag(event, ${s}, '${safeTok}', -1)">${tok}</span>`;
+        });
+        inner += `</div>`;
+
+        let blankIdx = 0;
+        const promptHtml = q.prompt.replace(/\n/g, '<br/>').replace(/\[blank\]/g, () => {
+          const bIndex = blankIdx++;
+          const filledVal = currentArr[bIndex] || '';
+          const safeFilled = encodeURIComponent(filledVal);
+          if (filledVal) {
+            return `<span class="drop-target-slot filled" data-drop-slot="${s}" data-blank-idx="${bIndex}" onpointerdown="startChipPointerDrag(event, ${s}, '${safeFilled}', ${bIndex})"><span class="slot-inner-chip">${filledVal}</span></span>`;
+          }
+          return `<span class="drop-target-slot" data-drop-slot="${s}" data-blank-idx="${bIndex}" onclick="clickEmptyDropSlot(${s}, ${bIndex})"></span>`;
+        });
+
+        inner += `<div>${promptHtml}</div>`;
+      }
+      // (5) Điền đáp án
+      else if (q.type === 'fill_blank') {
+        const currentArr = userResponses[s] || [];
+        let blankIdx = 0;
+        let bodyHtml = q.prompt;
+        if (q.image && bodyHtml.includes('[IMAGE]')) {
+          bodyHtml = bodyHtml.replace('[IMAGE]', `<div style="text-align:center; margin:12px 0;"><img src="${q.image}" style="max-width:100%; max-height:260px;" /></div>`);
+        }
+        bodyHtml = bodyHtml.replace(/\n/g, '<br/>').replace(/\[blank\]/g, () => {
+          const bIndex = blankIdx++;
+          const val = currentArr[bIndex] !== undefined ? currentArr[bIndex] : '';
+          return `<input type="text" class="fill-blank-inline" value="${val}" oninput="onFillBlankInput(${s}, ${bIndex}, this.value)" />`;
+        });
+        inner += `<div>${bodyHtml}</div>`;
+      }
+      // (1) Chọn 1 trong 4
+      else if (q.type === 'single') {
+        let bodyHtml = q.prompt.replace(/\n/g, '<br/>');
+        if (q.image && bodyHtml.includes('[IMAGE]')) {
+          bodyHtml = bodyHtml.replace('[IMAGE]', `<div style="text-align:center; margin:12px 0;"><img src="${q.image}" style="max-width:100%; max-height:260px;" /></div>`);
+        }
+        inner += `<div>${bodyHtml}</div>`;
+        const sel = userResponses[s];
+        inner += `<div class="mcq-list">` + (q.options || []).map((opt, idx) => `
+          <div class="mcq-item ${sel === idx ? 'selected' : ''}" onclick="selectSingleOption(${s}, ${idx})">
+            <div class="radio-circle"></div>
+            <div>${opt}</div>
+          </div>
+        `).join('') + `</div>`;
+      }
+      // (2) Đúng / Sai
+      else if (q.type === 'true_false') {
+        let bodyHtml = q.prompt.replace(/\n/g, '<br/>');
+        if (q.image && bodyHtml.includes('[IMAGE]')) {
+          bodyHtml = bodyHtml.replace('[IMAGE]', `<div style="text-align:center; margin:12px 0;"><img src="${q.image}" style="max-width:100%; max-height:260px;" /></div>`);
+        }
+        inner += `<div>${bodyHtml}</div>`;
+        const map = userResponses[s] || {};
+        inner += `
+          <table class="tf-table">
+            <thead><tr><th></th><th>Đúng</th><th>Sai</th></tr></thead>
+            <tbody>
+              ${(q.statements || []).map((st, idx) => `
+                <tr>
+                  <td>${st.text}</td>
+                  <td class="tf-choice-cell"><div class="tf-radio ${map[idx] === 'T' ? 'selected' : ''}" onclick="selectTrueFalse(${s}, ${idx}, 'T')"></div></td>
+                  <td class="tf-choice-cell"><div class="tf-radio ${map[idx] === 'F' ? 'selected' : ''}" onclick="selectTrueFalse(${s}, ${idx}, 'F')"></div></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      }
+      // (3) Chọn nhiều đáp án
+      else if (q.type === 'multiple') {
+        inner += `<div>${q.prompt.replace(/\n/g, '<br/>')}</div>`;
+        const arr = userResponses[s] || [];
+        inner += `<div class="mcq-list">` + (q.options || []).map((opt, idx) => {
+          const checked = arr.includes(idx);
+          return `
+            <div class="msq-item ${checked ? 'selected' : ''}" onclick="toggleMultipleOption(${s}, ${idx})">
+              <div class="checkbox-square">${checked ? '&#10003;' : ''}</div>
+              <div>${opt}</div>
+            </div>
+          `;
+        }).join('') + `</div>`;
+      }
+
+      return `
+        <div class="split-q-block" id="q-block-${s}">
+          <div class="q-header-row">
+            <div class="q-number-badge">${s}</div>
+            <div class="q-body-content">${inner}</div>
+            <button class="q-bookmark-btn ${flaggedSlots[s] ? 'flagged' : ''}" onclick="toggleBookmarkSlot(${s})">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h12a2 2 0 0 1 2 2v18l-8-4-8 4V4a2 2 0 0 1 2-2z"/></svg>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCbtWorkspace(resetScroll = false) {
+      const ws = document.getElementById('cbtWorkspace');
+      const currentQ = getQuestionBySlot(activeSlotNumber);
+      if (!currentQ) return;
+
+      const oldLeft = ws.querySelector('.split-left-passage');
+      const oldRight = ws.querySelector('.split-right-questions');
+      const savedLeftScroll = (!resetScroll && oldLeft) ? oldLeft.scrollTop : 0;
+      const savedRightScroll = (!resetScroll && oldRight) ? oldRight.scrollTop : 0;
+
+      // Nếu câu hỏi thuộc bài Đọc hiểu hoặc Khoa học có ngữ liệu -> Chia 2 cột
+      if (currentQ.passageHtml) {
+        currentRenderedPassage = currentQ.passageHtml;
+        const samePassageQuestions = activeExam.questions.filter(q => q.passageHtml === currentQ.passageHtml);
+        ws.innerHTML = `
+          <div class="split-col-card">
+            <div class="split-left-passage">${currentQ.passageHtml}</div>
+            <div class="split-right-questions">
+              ${samePassageQuestions.map(q => buildQuestionItemHtml(q)).join('')}
+            </div>
+          </div>
+        `;
+        const newLeft = ws.querySelector('.split-left-passage');
+        const newRight = ws.querySelector('.split-right-questions');
+        if (newLeft) newLeft.scrollTop = savedLeftScroll;
+        if (newRight) newRight.scrollTop = savedRightScroll;
+      } else {
+        currentRenderedPassage = null;
+        ws.innerHTML = `
+          <div class="single-col-scroll">
+            <div class="cbt-single-card">
+              ${buildQuestionItemHtml(currentQ)}
+            </div>
+          </div>
+        `;
+      }
+
+      updateNavButtonsState();
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise([ws]);
+      }
+    }
+
+    // ================= TƯƠNG TÁC TRẢ LỜI & KÉO THẢ FLOATING DRAG =================
+    function selectSingleOption(slot, idx) {
+      activeSlotNumber = slot;
+      userResponses[slot] = idx;
+      rerenderSingleQuestionBlock(slot);
+      renderCbtSidebar();
+    }
+
+    function selectTrueFalse(slot, stmtIdx, val) {
+      activeSlotNumber = slot;
+      if (!userResponses[slot]) userResponses[slot] = {};
+      userResponses[slot][stmtIdx] = val;
+      rerenderSingleQuestionBlock(slot);
+      renderCbtSidebar();
+    }
+
+    function toggleMultipleOption(slot, idx) {
+      activeSlotNumber = slot;
+      if (!Array.isArray(userResponses[slot])) userResponses[slot] = [];
+      const arr = userResponses[slot];
+      const pos = arr.indexOf(idx);
+      if (pos >= 0) arr.splice(pos, 1);
+      else arr.push(idx);
+      rerenderSingleQuestionBlock(slot);
+      renderCbtSidebar();
+    }
+
+    function onFillBlankInput(slot, blankIdx, val) {
+      activeSlotNumber = slot;
+      if (!Array.isArray(userResponses[slot])) userResponses[slot] = [];
+      userResponses[slot][blankIdx] = val;
+      renderCbtSidebar();
+    }
+
+    function clickEmptyDropSlot(slot, blankIdx) {
+      if (pickedTokenState && pickedTokenState.slot === slot) {
+        if (!Array.isArray(userResponses[slot])) userResponses[slot] = [];
+        userResponses[slot][blankIdx] = pickedTokenState.value;
+        pickedTokenState = null;
+        rerenderSingleQuestionBlock(slot);
+        renderCbtSidebar();
+      }
+    }
+
+    function startChipPointerDrag(e, slot, encodedVal, fromBlankIdx) {
+      e.preventDefault();
+      const val = decodeURIComponent(encodedVal);
+      activeSlotNumber = slot;
+
+      const startX = e.clientX;
+      const startY = e.clientY;
+      const ghost = document.createElement('div');
+      ghost.className = 'floating-drag-ghost';
+      ghost.textContent = val;
+      ghost.style.left = startX + 'px';
+      ghost.style.top = startY + 'px';
+      ghost.style.display = 'none';
+      document.body.appendChild(ghost);
+
+      pointerDragState = { slot, val, fromBlankIdx, startX, startY, moved: false, ghost };
+
+      const onMove = (ev) => {
+        if (!pointerDragState) return;
+        const dx = ev.clientX - pointerDragState.startX;
+        const dy = ev.clientY - pointerDragState.startY;
+        if (Math.hypot(dx, dy) > 5) {
+          pointerDragState.moved = true;
+          pointerDragState.ghost.style.display = 'block';
+        }
+        pointerDragState.ghost.style.left = ev.clientX + 'px';
+        pointerDragState.ghost.style.top = ev.clientY + 'px';
+
+        document.querySelectorAll('.drop-target-slot').forEach(el => el.classList.remove('drag-hover'));
+        const under = document.elementFromPoint(ev.clientX, ev.clientY);
+        const slotEl = under ? under.closest('.drop-target-slot') : null;
+        if (slotEl && parseInt(slotEl.dataset.dropSlot, 10) === slot) {
+          slotEl.classList.add('drag-hover');
+        }
+      };
+
+      const onUp = (ev) => {
+        window.removeEventListener('pointermove', onMove);
+        window.removeEventListener('pointerup', onUp);
+        document.querySelectorAll('.drop-target-slot').forEach(el => el.classList.remove('drag-hover'));
+
+        const st = pointerDragState;
+        pointerDragState = null;
+        if (st && st.ghost) st.ghost.remove();
+        if (!st) return;
+
+        if (!st.moved) {
+          if (st.fromBlankIdx >= 0) {
+            userResponses[slot][st.fromBlankIdx] = '';
+            pickedTokenState = null;
+          } else {
+            pickedTokenState = (pickedTokenState && pickedTokenState.value === st.val) ? null : { slot, value: st.val };
+          }
+          rerenderSingleQuestionBlock(slot);
+          renderCbtSidebar();
+          return;
+        }
+
+        const under = document.elementFromPoint(ev.clientX, ev.clientY);
+        const targetSlotEl = under ? under.closest('.drop-target-slot') : null;
+        if (!Array.isArray(userResponses[slot])) userResponses[slot] = [];
+
+        if (targetSlotEl && parseInt(targetSlotEl.dataset.dropSlot, 10) === slot) {
+          const targetIdx = parseInt(targetSlotEl.dataset.blankIdx, 10);
+          const oldTargetVal = userResponses[slot][targetIdx] || '';
+          if (st.fromBlankIdx >= 0) {
+            userResponses[slot][st.fromBlankIdx] = oldTargetVal;
+          }
+          userResponses[slot][targetIdx] = st.val;
+        } else if (st.fromBlankIdx >= 0) {
+          userResponses[slot][st.fromBlankIdx] = '';
+        }
+
+        pickedTokenState = null;
+        rerenderSingleQuestionBlock(slot);
+        renderCbtSidebar();
+      };
+
+      window.addEventListener('pointermove', onMove);
+      window.addEventListener('pointerup', onUp);
+    }
+
+    // ================= CÔNG CỤ CHUYỂN NHANH PDF / TEXT -> JSON =================
+    function openPdfConverterModal() {
+      document.getElementById('pdfConverterModal').style.display = 'flex';
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    function copyAiPromptTemplate() {
+      const promptText = `Hãy chuyển toàn bộ các câu hỏi trong file PDF đề thi đính kèm sang mảng JSON theo đúng cấu trúc dưới đây để nạp vào web luyện thi TSA (giữ nguyên công thức Toán trong cặp dấu $...$):
+{
+  "title": "Tên đề thi",
+  "group": "tsa",
+  "subject": "Tư duy Toán học",
+  "duration": 60,
+  "totalSlots": 40,
+  "questions": [
+    { "slot": 1, "type": "single", "prompt": "Nội dung câu hỏi...", "options": ["Đáp án A", "Đáp án B", "Đáp án C", "Đáp án D"], "correct": 0 },
+    { "slot": 2, "type": "true_false", "prompt": "Xét tính đúng sai...", "statements": [{ "text": "Mệnh đề 1", "correct": "T" }, { "text": "Mệnh đề 2", "correct": "F" }] },
+    { "slot": 3, "type": "drag_drop", "tokens": ["Từ 1", "Từ 2"], "prompt": "Điền vào [blank] và [blank]", "correctAnswers": ["Từ 1", "Từ 2"] },
+    { "slot": 4, "type": "fill_blank", "prompt": "Giá trị bằng [blank].", "correctAnswers": ["10"] }
+  ]
+}`;
+      navigator.clipboard.writeText(promptText);
+      alert('Đã copy Prompt mẫu! Bạn có thể dán kèm file PDF vào Gemini hoặc ChatGPT để lấy JSON ngay.');
+    }
+
+    async function extractTextFromPdfFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      document.getElementById('convExamTitle').value = file.name.replace(/\.pdf$/i, '');
+      const textarea = document.getElementById('convRawText');
+      textarea.value = 'Đang quét nội dung từ file PDF, vui lòng đợi 2-3 giây...';
+
+      try {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        let fullText = '';
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          const strings = content.items.map(item => item.str);
+          fullText += strings.join(' ') + '\n';
+        }
+        textarea.value = fullText;
+      } catch (err) {
+        textarea.value = 'Không thể đọc tự động file PDF này. Bạn hãy copy chữ từ PDF/Word dán vào đây.';
+      }
+    }
+
+    function parseAndImportFromConverter() {
+      const raw = document.getElementById('convRawText').value.trim();
+      if (!raw) {
+        alert('Vui lòng chọn file PDF hoặc dán văn bản đề thi!');
+        return;
+      }
+
+      if (raw.startsWith('{') || raw.startsWith('[')) {
+        try {
+          const parsed = JSON.parse(raw);
+          const examObj = Array.isArray(parsed) ? {
+            id: 'exam_' + Date.now(),
+            title: document.getElementById('convExamTitle').value,
+            group: document.getElementById('convExamGroup').value,
+            subject: document.getElementById('convExamSubject').value,
+            duration: 60,
+            totalSlots: parsed.length,
+            questions: parsed
+          } : { ...parsed, id: 'exam_' + Date.now() };
+
+          exams.unshift(examObj);
+          persistExams();
+          closeModal('pdfConverterModal');
+          renderAllLists();
+          return;
+        } catch (e) {
+          alert('Chuỗi JSON chưa đúng cú pháp, hệ thống sẽ chuyển sang chế độ tách câu hỏi tự động từ văn bản.');
+        }
+      }
+
+      const regex = /Câu\s+(\d+)[\.:]\s*([\s\S]*?)(?=Câu\s+\d+[\.:]|$)/gi;
+      const questions = [];
+      let match;
+
+      while ((match = regex.exec(raw)) !== null) {
+        const slot = parseInt(match[1], 10);
+        let block = match[2].trim();
+
+        const optMatch = block.match(/([\s\S]*?)A\.\s*([\s\S]*?)B\.\s*([\s\S]*?)C\.\s*([\s\S]*?)D\.\s*([\s\S]*)/i);
+        if (optMatch) {
+          questions.push({
+            slot,
+            type: 'single',
+            prompt: optMatch[1].trim(),
+            options: [optMatch[2].trim(), optMatch[3].trim(), optMatch[4].trim(), optMatch[5].trim()],
+            correct: 0
+          });
+        } else {
+          const promptWithBlank = block.includes('...') ? block.replace(/\.{3,}/g, '[blank]') : (block + ' [blank]');
+          questions.push({
+            slot,
+            type: 'fill_blank',
+            prompt: promptWithBlank,
+            correctAnswers: ['']
+          });
+        }
+      }
+
+      if (questions.length === 0) {
+        alert('Không tìm thấy cấu trúc "Câu 1., Câu 2." trong văn bản!');
+        return;
+      }
+
+      exams.unshift({
+        id: 'exam_' + Date.now(),
+        title: document.getElementById('convExamTitle').value || 'Đề thi chuyển từ PDF',
+        group: document.getElementById('convExamGroup').value,
+        subject: document.getElementById('convExamSubject').value,
+        duration: 60,
+        totalSlots: questions.length,
+        questions
+      });
+
+      persistExams();
+      closeModal('pdfConverterModal');
+      renderAllLists();
+      alert(`Đã bóc tách thành công ${questions.length} câu hỏi và nạp vào phòng luyện thi!`);
+    }
+
+    // ================= NỘP BÀI & CHẤM ĐIỂM =================
+    function submitCurrentExam(auto = false) {
+      if (!auto && !confirm('Bạn có chắc chắn muốn nộp bài thi?')) return;
+      if (examInterval) clearInterval(examInterval);
+
+      let correctCount = 0;
+      const total = activeExam.questions.length;
+
+      activeExam.questions.forEach(q => {
+        const ans = userResponses[q.slot];
+        let ok = false;
+        if (q.type === 'single') ok = (ans === q.correct);
+        else if (q.type === 'true_false' && ans && q.statements) {
+          ok = q.statements.every((st, i) => ans[i] === st.correct);
+        } else if (q.type === 'multiple' && Array.isArray(ans) && Array.isArray(q.correctIndices)) {
+          ok = ([...ans].sort().join(',') === [...q.correctIndices].sort().join(','));
+        } else if ((q.type === 'drag_drop' || q.type === 'fill_blank') && Array.isArray(ans) && Array.isArray(q.correctAnswers)) {
+          ok = q.correctAnswers.every((c, i) => String(ans[i] || '').trim().toLowerCase() === String(c).trim().toLowerCase());
+        }
+        if (ok) correctCount++;
+      });
+
+      document.getElementById('resultModalBody').innerHTML = `
+        <div style="text-align:center; padding:16px 0;">
+          <div style="font-size:14px; color:#64748b;">Thí sinh: <strong>${document.getElementById('cbtCandidateName').textContent}</strong></div>
+          <div style="font-size:30px; font-weight:800; color:var(--primary); margin:10px 0;">
+            Đúng ${correctCount} / ${total} câu
+          </div>
+          <div style="font-size:15px; font-weight:600; color:#0e7490; margin-bottom:8px;">
+            Điểm quy đổi thang 100: ${Math.round((correctCount / Math.max(1, total)) * 100)} / 100 điểm
+          </div>
+          <p style="font-size:13.5px; color:#475569;">${activeExam.title}</p>
+        </div>
+      `;
+      document.getElementById('resultModal').style.display = 'flex';
+    }
+
+    function closeResultAndBack() {
+      closeModal('resultModal');
+      if (examInterval) clearInterval(examInterval);
+      document.getElementById('examRoomView').style.display = 'none';
+      document.getElementById('portalView').style.display = 'block';
+      renderAllLists();
+    }
+
+    function confirmExitExam() {
+      if (confirm('Rời khỏi phòng thi và quay về trang chính?')) closeResultAndBack();
+    }
+
+    function exportExamJson(id) {
+      const ex = exams.find(e => e.id === id);
+      if (!ex) return;
+      const blob = new Blob([JSON.stringify(ex, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = ex.title.replace(/\s+/g, '_') + '.json';
+      a.click();
+    }
+
+    function importExamJson(ev) {
+      const f = ev.target.files[0];
+      if (!f) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const data = JSON.parse(e.target.result);
+          data.id = 'exam_' + Date.now();
+          exams.unshift(data);
+          persistExams();
+          renderAllLists();
+        } catch (err) {
+          alert('File JSON không hợp lệ!');
+        }
+      };
+      reader.readAsText(f);
+      ev.target.value = '';
+    }
+
+    function deleteExam(id) {
+      if (!confirm('Xóa đề thi này?')) return;
+      exams = exams.filter(e => e.id !== id);
+      persistExams();
+      renderAllLists();
+    }
+
+    function openUploadResourceModal(type) {
+      uploadingResType = type;
+      document.getElementById('resTitle').value = '';
+      document.getElementById('resCategory').value = '';
+      document.getElementById('resMainFile').value = '';
+      document.getElementById('uploadResourceModal').style.display = 'flex';
+    }
+
+    function saveUploadedResource() {
+      const title = document.getElementById('resTitle').value.trim();
+      const category = document.getElementById('resCategory').value.trim();
+      const file = document.getElementById('resMainFile').files[0];
+      if (!title) return alert('Vui lòng nhập tiêu đề!');
+      resources.unshift({
+        id: 'res_' + Date.now(),
+        type: uploadingResType,
+        title,
+        category,
+        mainFileName: file ? file.name : '',
+        mainFileUrl: file ? URL.createObjectURL(file) : ''
+      });
+      closeModal('uploadResourceModal');
+      renderAllLists();
+    }
+
+    function deleteResource(id) {
+      resources = resources.filter(r => r.id !== id);
+      renderAllLists();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderAllLists();
+    });
+  </script>
+</body>
+</html>
