@@ -1170,6 +1170,11 @@
      * 7. CHUYỂN ĐỔI 2 TAB TRONG MỖI MÔN: LÝ THUYẾT & ĐỀ BÀI TỰ LUYỆN
      **************************************************************************/
     function switchSectionTab(tabName) {
+      if (tabName === 'theory' && appState.activeExam) {
+        showToast('Đang trong chế độ luyện đề, không thể chuyển qua mục Lý thuyết!');
+        return;
+      }
+
       appState.activeTab = tabName;
       const btnTheory = document.getElementById('tabBtn_theory');
       const btnExercise = document.getElementById('tabBtn_exercise');
@@ -1183,7 +1188,7 @@
         viewExercise.classList.add('hidden');
       } else {
         btnExercise.className = 'px-4 py-2 text-sm font-semibold border border-neutral-900 bg-neutral-900 text-white rounded';
-        btnTheory.className = 'px-4 py-2 text-sm font-semibold border border-neutral-300 bg-white text-neutral-700 hover:border-neutral-900 rounded';
+        btnTheory.className = 'px-4 py-2 text-sm font-semibold border border-neutral-300 bg-white text-neutral-700 hover:border-neutral-900 rounded' + (appState.activeExam ? ' opacity-50 cursor-not-allowed' : '');
         viewExercise.classList.remove('hidden');
         viewTheory.classList.add('hidden');
       }
@@ -1497,6 +1502,12 @@
       appState.expandedExplanations = {};
       initBlankStudentAnswers(appState.activeExam);
 
+      // Khóa giao diện nút tab Lý thuyết khi đang làm đề
+      const btnTheory = document.getElementById('tabBtn_theory');
+      if (btnTheory) {
+        btnTheory.classList.add('opacity-50', 'cursor-not-allowed');
+      }
+
       document.getElementById('activeExamLessonBadge').textContent = `Bài ${lessonNumber}`;
       document.getElementById('activeExamTitle').textContent = exam.title;
       document.getElementById('activeExamMeta').textContent = `${getSubjectName(exam.subjectId)} • ${exam.duration || 45} phút`;
@@ -1533,6 +1544,13 @@
     function closeActiveExam() {
       stopExamTimer();
       appState.activeExam = null;
+
+      // Mở khóa lại nút tab Lý thuyết khi thoát khỏi đề luyện tập
+      const btnTheory = document.getElementById('tabBtn_theory');
+      if (btnTheory) {
+        btnTheory.classList.remove('opacity-50', 'cursor-not-allowed');
+      }
+
       document.getElementById('activeExamWorkspace').classList.add('hidden');
       document.getElementById('exercisesListView').classList.remove('hidden');
     }
