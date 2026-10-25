@@ -94,11 +94,11 @@
 
     /* Màu sắc chỉ xuất hiện sau khi bấm Nộp bài */
     .grade-correct-box {
-      background-color: #ecfdf5 !important; /* Xanh lá nhạt */
+      background-color: #ecfdf5 !important;
       border-color: #10b981 !important;
     }
     .grade-wrong-box {
-      background-color: #fff1f2 !important; /* Đỏ nhạt */
+      background-color: #fff1f2 !important;
       border-color: #f43f5e !important;
     }
     .grade-correct-badge {
@@ -118,7 +118,6 @@
   <!-- HEADER TRÊN CÙNG -->
   <header class="sticky top-0 z-30 bg-white border-b border-neutral-300">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
-      <!-- Thương hiệu GH - Hệ thống ôn thi (Không có dòng mô tả phụ) -->
       <div class="flex items-center gap-2.5">
         <div class="w-8 h-8 border-2 border-neutral-900 flex items-center justify-center font-mono font-bold text-sm tracking-tight bg-neutral-900 text-white rounded">
           GH
@@ -128,7 +127,6 @@
         </h1>
       </div>
 
-      <!-- Khu vực Chế độ & Nút Quản trị viên (Không dùng chữ Admin) -->
       <div class="flex items-center gap-2">
         <span id="roleIndicator" class="px-2.5 py-1 text-xs font-mono border border-neutral-300 bg-neutral-100 text-neutral-800 rounded">
           Học sinh
@@ -139,12 +137,12 @@
       </div>
     </div>
 
-    <!-- THANH CÔNG CỤ QUẢN TRỊ VIÊN (Chỉ hiện khi đã mở khóa) -->
+    <!-- THANH CÔNG CỤ QUẢN TRỊ VIÊN -->
     <div id="managerToolbar" class="hidden bg-neutral-100 border-t border-neutral-300">
       <div class="max-w-5xl mx-auto px-4 sm:px-6 py-2 flex flex-wrap items-center justify-between gap-2 text-xs">
         <div class="flex items-center gap-2 font-mono text-neutral-800 font-medium">
           <span class="inline-block w-2 h-2 bg-neutral-900 rounded-full"></span>
-          <span>Chế độ Quản trị viên đang hoạt động</span>
+          <span>Chế độ Quản trị viên</span>
         </div>
         <div class="flex flex-wrap items-center gap-2">
           <button onclick="openTheoryModal()" class="px-2.5 py-1.5 bg-white border border-neutral-400 hover:border-neutral-900 text-neutral-900 font-medium rounded">
@@ -154,11 +152,14 @@
             + Tạo bài tự luyện mới
           </button>
           <span class="text-neutral-300">|</span>
+          <button onclick="exportStandaloneHTML()" class="px-2.5 py-1.5 bg-neutral-900 text-white hover:bg-neutral-700 font-mono font-semibold rounded" title="Đóng gói toàn bộ dữ liệu đã tạo vào 1 file index.html để up lên GitHub cho mọi máy khác đều thấy">
+            ⬇ Tải index.html (Kèm dữ liệu)
+          </button>
           <button onclick="exportAllDataJSON()" class="px-2.5 py-1.5 bg-white border border-neutral-400 hover:border-neutral-900 text-neutral-800 font-mono rounded">
-            Xuất dữ liệu (JSON)
+            Xuất JSON
           </button>
           <label class="px-2.5 py-1.5 bg-white border border-neutral-400 hover:border-neutral-900 text-neutral-800 font-mono rounded cursor-pointer">
-            Nhập dữ liệu (JSON)
+            Nhập JSON
             <input type="file" id="importJsonInput" accept=".json" class="hidden" onchange="importDataFromJSON(event)" />
           </label>
           <button onclick="openResetSampleConfirm()" class="px-2 py-1.5 text-neutral-600 hover:text-neutral-900 underline font-mono">
@@ -172,7 +173,7 @@
   <!-- NỘI DUNG CHÍNH -->
   <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6">
 
-    <!-- THANH CHỌN MÔN HỌC (Kèm nút + Thêm môn và nút × xóa môn khi ở chế độ Quản trị viên) -->
+    <!-- THANH CHỌN MÔN HỌC -->
     <section id="subjectBarSection" class="mb-6 pb-4 border-b border-neutral-200">
       <div class="text-xs font-mono uppercase tracking-wider text-neutral-500 mb-2.5">
         Môn học
@@ -182,9 +183,8 @@
       </div>
     </section>
 
-    <!-- KHU VỰC NỘI DUNG MÔN HỌC (Chỉ chia 2 phần: Lý thuyết & Đề bài tự luyện) -->
+    <!-- KHU VỰC NỘI DUNG MÔN HỌC -->
     <section id="subjectContentSection" class="space-y-5">
-      <!-- Thanh 2 Tab: Lý thuyết | Đề bài tự luyện -->
       <div class="flex flex-wrap items-center justify-between gap-3 border-b border-neutral-300 pb-3">
         <div class="flex items-center gap-2">
           <button onclick="switchSectionTab('theory')" id="tabBtn_theory" class="px-4 py-2 text-sm font-semibold border border-neutral-900 bg-neutral-900 text-white rounded">
@@ -195,7 +195,6 @@
           </button>
         </div>
 
-        <!-- Nút thêm nhanh theo tab đang mở dành cho Quản trị viên -->
         <div id="managerQuickActionWrapper" class="hidden">
           <button id="managerQuickAddBtn" onclick="handleQuickAddByTab()" class="px-3 py-1.5 text-xs font-semibold bg-neutral-900 text-white rounded hover:bg-neutral-800">
             + Thêm mới
@@ -205,26 +204,20 @@
 
       <!-- TAB 1: DANH SÁCH BÀI LÝ THUYẾT -->
       <div id="theoryTabView" class="space-y-3">
-        <div id="theoryListContainer" class="space-y-3">
-          <!-- Render động -->
-        </div>
+        <div id="theoryListContainer" class="space-y-3"></div>
       </div>
 
-      <!-- TAB 2: ĐỀ BÀI TỰ LUYỆN (Chia thành Bài 1, Bài 2... + Khu vực làm bài trực tuyến) -->
+      <!-- TAB 2: ĐỀ BÀI TỰ LUYỆN -->
       <div id="exerciseTabView" class="hidden space-y-5">
-        <!-- Danh sách các bài tập nhỏ (Bài 1, Bài 2...) -->
         <div id="exercisesListView" class="space-y-3">
-          <div id="exercisesListContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <!-- Render động -->
-          </div>
+          <div id="exercisesListContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
         </div>
 
-        <!-- Giao diện Làm bài trực tuyến (Mở ra khi bấm vào Bài 1, Bài 2...) -->
+        <!-- Giao diện Làm bài trực tuyến -->
         <div id="activeExamWorkspace" class="hidden space-y-6 pt-2">
-          <!-- Thanh điều hướng bài tập đang mở -->
           <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-neutral-300">
             <button onclick="closeActiveExam()" class="px-3 py-1.5 text-xs font-medium border border-neutral-400 hover:border-neutral-900 rounded inline-flex items-center gap-1.5">
-              <span>&larr;</span> Danh sách bài tự luyện
+              <span>&larr;</span> Quay trở về
             </button>
             <div class="flex items-center gap-2.5">
               <span id="examTimerDisplay" class="font-mono text-xs px-2.5 py-1 border border-neutral-300 bg-neutral-50 rounded">
@@ -254,9 +247,9 @@
                 Thời gian: 50 phút
               </div>
             </div>
-            <p id="activeExamDesc" class="text-xs text-neutral-600 mt-2.5 leading-relaxed"></p>
+            <p id="activeExamDesc" class="text-xs text-neutral-600 mt-2.5 leading-relaxed whitespace-pre-wrap"></p>
 
-            <!-- Bảng tổng kết điểm (Chỉ hiện sau khi bấm Nộp bài) -->
+            <!-- Bảng tổng kết điểm -->
             <div id="examResultSummaryBanner" class="hidden mt-4 p-4 border border-neutral-900 bg-neutral-50 rounded">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
@@ -284,7 +277,7 @@
             </div>
           </div>
 
-          <!-- PHẦN I: TRẮC NGHIỆM 4 LỰA CHỌN (A, B, C, D) -->
+          <!-- PHẦN I -->
           <div id="examSectionPart1" class="space-y-4">
             <div class="border-b-2 border-neutral-900 pb-1.5">
               <h3 class="text-sm sm:text-base font-bold uppercase">
@@ -297,7 +290,7 @@
             <div id="part1QuestionsContainer" class="space-y-4"></div>
           </div>
 
-          <!-- PHẦN II: TRẮC NGHIỆM ĐÚNG / SAI (a, b, c, d) -->
+          <!-- PHẦN II -->
           <div id="examSectionPart2" class="space-y-4 pt-3">
             <div class="border-b-2 border-neutral-900 pb-1.5">
               <h3 class="text-sm sm:text-base font-bold uppercase">
@@ -310,7 +303,7 @@
             <div id="part2QuestionsContainer" class="space-y-4"></div>
           </div>
 
-          <!-- PHẦN III: TRẢ LỜI NGẮN (PHIẾU TÔ 4 CỘT) -->
+          <!-- PHẦN III -->
           <div id="examSectionPart3" class="space-y-4 pt-3">
             <div class="border-b-2 border-neutral-900 pb-1.5">
               <h3 class="text-sm sm:text-base font-bold uppercase">
@@ -323,14 +316,19 @@
             <div id="part3QuestionsContainer" class="space-y-5"></div>
           </div>
 
-          <!-- Nút nộp bài dưới cùng -->
-          <div class="pt-5 border-t border-neutral-300 flex items-center justify-end gap-3">
-            <button onclick="resetActiveExamAnswers()" class="px-4 py-2 text-xs font-medium border border-neutral-400 hover:border-neutral-900 rounded">
-              Làm lại bài này
+          <!-- Nút dưới cùng -->
+          <div class="pt-5 border-t border-neutral-300 flex items-center justify-between gap-3">
+            <button onclick="closeActiveExam()" class="px-4 py-2 text-xs font-medium border border-neutral-400 hover:border-neutral-900 rounded">
+              &larr; Quay trở về
             </button>
-            <button id="btnSubmitExamBottom" onclick="submitActiveExam()" class="px-6 py-2 text-sm font-bold bg-neutral-900 text-white hover:bg-neutral-800 rounded">
-              Nộp bài
-            </button>
+            <div class="flex items-center gap-3">
+              <button onclick="resetActiveExamAnswers()" class="px-4 py-2 text-xs font-medium border border-neutral-400 hover:border-neutral-900 rounded">
+                Làm lại bài này
+              </button>
+              <button id="btnSubmitExamBottom" onclick="submitActiveExam()" class="px-6 py-2 text-sm font-bold bg-neutral-900 text-white hover:bg-neutral-800 rounded">
+                Nộp bài
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -338,11 +336,7 @@
 
   </main>
 
-  <!-- ====================================================================== -->
-  <!-- CÁC HỘP THOẠI MODAL                                                     -->
-  <!-- ====================================================================== -->
-
-  <!-- 1. MODAL ĐĂNG NHẬP QUẢN TRỊ VIÊN (Không hiện gợi ý mật khẩu, không có chữ Admin) -->
+  <!-- 1. MODAL ĐĂNG NHẬP QUẢN TRỊ VIÊN -->
   <div id="managerLoginModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
     <div class="bg-white border-2 border-neutral-900 rounded max-w-sm w-full p-5 space-y-4">
       <div class="flex items-center justify-between border-b border-neutral-200 pb-2.5">
@@ -450,7 +444,7 @@
     </div>
   </div>
 
-  <!-- 4. MODAL THÊM / SỬA BÀI LÝ THUYẾT (QUẢN TRỊ VIÊN) -->
+  <!-- 4. MODAL THÊM / SỬA BÀI LÝ THUYẾT -->
   <div id="theoryEditorModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
     <div class="bg-white border-2 border-neutral-900 rounded max-w-2xl w-full max-h-[90vh] flex flex-col">
       <div class="px-5 py-3.5 border-b border-neutral-300 flex items-center justify-between">
@@ -477,7 +471,7 @@
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-neutral-700 mb-1">Nội dung lý thuyết</label>
+          <label class="block text-xs font-semibold text-neutral-700 mb-1">Nội dung lý thuyết (Nhấn Enter để xuống dòng)</label>
           <textarea
             id="docContentInput"
             rows="6"
@@ -524,7 +518,7 @@
     </div>
   </div>
 
-  <!-- 5. MODAL TẠO / SỬA ĐỀ BÀI TỰ LUYỆN 3 PHẦN (QUẢN TRỊ VIÊN) -->
+  <!-- 5. MODAL TẠO / SỬA ĐỀ BÀI TỰ LUYỆN 3 PHẦN -->
   <div id="examCreatorModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-2 sm:p-4">
     <div class="bg-white border-2 border-neutral-900 rounded max-w-5xl w-full max-h-[94vh] flex flex-col">
       <div class="px-5 py-3.5 border-b border-neutral-300 flex items-center justify-between">
@@ -556,7 +550,7 @@
           </div>
           <div class="sm:col-span-3">
             <label class="block text-xs font-semibold text-neutral-700 mb-1">Mô tả / Ghi chú</label>
-            <input type="text" id="examDescInput" placeholder="VD: Bài luyện tập gồm 3 phần trắc nghiệm..." class="w-full px-3 py-1.5 text-sm border border-neutral-400 rounded bg-white" />
+            <textarea id="examDescInput" rows="2" placeholder="VD: Bài luyện tập gồm 3 phần trắc nghiệm..." class="w-full px-3 py-1.5 text-sm border border-neutral-400 rounded bg-white"></textarea>
           </div>
         </div>
 
@@ -636,11 +630,15 @@
   <!-- ====================================================================== -->
   <script>
     /**************************************************************************
-     * 1. CẤU HÌNH HỆ THỐNG & TRẠNG THÁI
+     * 1. CẤU HÌNH HỆ THỐNG & DỮ LIỆU ĐÓNG GÓI CHUNG CHO MỌI MÁY
      **************************************************************************/
     const DB_NAME = 'GH_HeThongOnThi_DB_v3';
     const DB_VERSION = 1;
     const MANAGER_SECRET = '0905konamkongu';
+
+    /*__EMBEDDED_DATA_START__*/
+    const EMBEDDED_SHARED_DATA = null;
+    /*__EMBEDDED_DATA_END__*/
 
     let appState = {
       isManager: false,
@@ -649,14 +647,13 @@
       subjects: [],
       documents: [], // Lưu các bài Lý thuyết
       exams: [],     // Lưu các Đề bài tự luyện (Bài 1, Bài 2...)
-      // Trạng thái khi học sinh đang mở 1 bài tự luyện
       activeExam: null,
       studentAnswers: {
-        part1: {}, // { qIdx: 'A' | 'B' | 'C' | 'D' }
-        part2: {}, // { qIdx: { a: true|false, b: true|false, c: true|false, d: true|false } }
-        part3: {}  // { qIdx: ['', '', '', ''] } (Đúng 4 cột ngang)
+        part1: {},
+        part2: {},
+        part3: {}
       },
-      expandedExplanations: {}, // Lưu trạng thái đóng/mở nút "Xem giải thích"
+      expandedExplanations: {},
       isSubmitted: false,
       timerSeconds: 0,
       timerInterval: null,
@@ -668,8 +665,13 @@
       }
     };
 
+    // Kiểm tra có đang trong lúc làm bài thi (chưa nộp) hay không
+    function isExamInProgressLocked() {
+      return appState.activeExam !== null && !appState.isSubmitted;
+    }
+
     /**************************************************************************
-     * 2. KHỞI TẠO DỮ LIỆU MẪU (LÝ THUYẾT + BÀI 1, BÀI 2 CHUẨN 4 CỘT)
+     * 2. KHỞI TẠO DỮ LIỆU MẪU
      **************************************************************************/
     function createSampleTextBase64(textContent) {
       const utf8Bytes = new TextEncoder().encode(textContent);
@@ -852,7 +854,7 @@
     }
 
     /**************************************************************************
-     * 3. LƯU TRỮ INDEXEDDB
+     * 3. LƯU TRỮ INDEXEDDB & ĐỒNG BỘ DỮ LIỆU CHUNG
      **************************************************************************/
     function openDatabase() {
       return new Promise((resolve, reject) => {
@@ -895,7 +897,9 @@
           tx.onerror = () => reject(tx.error);
         });
       } catch (err) {
-        localStorage.setItem(DB_NAME + '_' + key, JSON.stringify(value));
+        try {
+          localStorage.setItem(DB_NAME + '_' + key, JSON.stringify(value));
+        } catch (e) {}
         return true;
       }
     }
@@ -907,20 +911,52 @@
     }
 
     async function loadInitialAppState() {
+      // 1. Kiểm tra nếu có file data.json đặt cùng thư mục trên GitHub
+      try {
+        if (window.location.protocol.startsWith('http')) {
+          const resp = await fetch('./data.json?t=' + Date.now());
+          if (resp.ok) {
+            const remoteData = await resp.json();
+            if (Array.isArray(remoteData.subjects) && Array.isArray(remoteData.documents) && Array.isArray(remoteData.exams)) {
+              appState.subjects = remoteData.subjects;
+              appState.documents = remoteData.documents;
+              appState.exams = remoteData.exams;
+              await saveAllAppStateToDB();
+              appState.selectedSubjectId = appState.subjects[0] ? appState.subjects[0].id : '';
+              renderEntireApp();
+              return;
+            }
+          }
+        }
+      } catch (e) {}
+
+      // 2. Đọc dữ liệu từ IndexedDB trên máy hiện tại
       const storedSubjects = await dbGet('subjects');
       const storedDocs = await dbGet('documents');
       const storedExams = await dbGet('exams');
+      const storedEmbeddedStamp = await dbGet('embeddedStamp');
 
-      if (!storedSubjects || !storedDocs || !storedExams) {
+      // 3. Nếu file index.html này đã được đóng gói dữ liệu (EMBEDDED_SHARED_DATA) mới hơn
+      if (
+        EMBEDDED_SHARED_DATA &&
+        Array.isArray(EMBEDDED_SHARED_DATA.subjects) &&
+        (!storedSubjects || !storedEmbeddedStamp || EMBEDDED_SHARED_DATA.exportedAt > storedEmbeddedStamp)
+      ) {
+        appState.subjects = EMBEDDED_SHARED_DATA.subjects;
+        appState.documents = EMBEDDED_SHARED_DATA.documents || [];
+        appState.exams = EMBEDDED_SHARED_DATA.exams || [];
+        await saveAllAppStateToDB();
+        await dbSet('embeddedStamp', EMBEDDED_SHARED_DATA.exportedAt || Date.now());
+      } else if (storedSubjects && storedDocs && storedExams) {
+        appState.subjects = storedSubjects;
+        appState.documents = storedDocs;
+        appState.exams = storedExams;
+      } else {
         const sample = getInitialSampleData();
         appState.subjects = sample.subjects;
         appState.documents = sample.documents;
         appState.exams = sample.exams;
         await saveAllAppStateToDB();
-      } else {
-        appState.subjects = storedSubjects;
-        appState.documents = storedDocs;
-        appState.exams = storedExams;
       }
 
       if (appState.subjects.length > 0 && !appState.selectedSubjectId) {
@@ -1046,7 +1082,7 @@
     }
 
     /**************************************************************************
-     * 6. QUẢN LÝ MÔN HỌC (THÊM / XÓA TRỰC TIẾP TRÊN THANH MÔN HỌC)
+     * 6. QUẢN LÝ MÔN HỌC
      **************************************************************************/
     function renderEntireApp() {
       updateManagerUI();
@@ -1062,8 +1098,12 @@
     }
 
     function selectSubjectFilter(subjectId) {
+      if (isExamInProgressLocked()) {
+        showToast('Đang làm bài thi! Chỉ được đổi môn sau khi ấn Nộp bài hoặc Quay trở về.');
+        return;
+      }
       appState.selectedSubjectId = subjectId;
-      if (appState.activeExam && appState.activeExam.subjectId !== subjectId) {
+      if (appState.activeExam) {
         closeActiveExam();
       }
       renderSubjectFilterPills();
@@ -1074,20 +1114,22 @@
 
     function renderSubjectFilterPills() {
       const container = document.getElementById('subjectPillsContainer');
+      const locked = isExamInProgressLocked();
       let html = '';
 
       appState.subjects.forEach(subj => {
         const active = appState.selectedSubjectId === subj.id;
+        const lockStyle = locked && !active ? 'opacity-40 cursor-not-allowed' : '';
         html += `
-          <div class="inline-flex items-center rounded border ${active ? 'border-neutral-900 bg-neutral-900 text-white' : 'border-neutral-300 bg-white text-neutral-800 hover:border-neutral-900'}">
+          <div class="inline-flex items-center rounded border ${active ? 'border-neutral-900 bg-neutral-900 text-white' : 'border-neutral-300 bg-white text-neutral-800 hover:border-neutral-900'} ${lockStyle}">
             <button
               type="button"
               onclick="selectSubjectFilter('${subj.id}')"
-              class="px-3 py-1.5 text-xs font-medium"
+              class="px-3 py-1.5 text-xs font-medium ${locked && !active ? 'cursor-not-allowed' : ''}"
             >
               ${escapeHtml(subj.name)}
             </button>
-            ${appState.isManager ? `
+            ${appState.isManager && !locked ? `
               <button
                 type="button"
                 onclick="deleteSubject('${subj.id}', event)"
@@ -1099,7 +1141,7 @@
         `;
       });
 
-      if (appState.isManager) {
+      if (appState.isManager && !locked) {
         html += `
           <button
             type="button"
@@ -1119,7 +1161,7 @@
     }
 
     function openAddSubjectModal() {
-      if (!appState.isManager) return;
+      if (!appState.isManager || isExamInProgressLocked()) return;
       document.getElementById('newSubjectNameInput').value = '';
       openModal('addSubjectModal');
       setTimeout(() => document.getElementById('newSubjectNameInput').focus(), 60);
@@ -1146,6 +1188,7 @@
 
     function deleteSubject(subjectId, event) {
       if (event) event.stopPropagation();
+      if (isExamInProgressLocked()) return;
       const subj = appState.subjects.find(s => s.id === subjectId);
       if (!subj) return;
 
@@ -1170,30 +1213,38 @@
      * 7. CHUYỂN ĐỔI 2 TAB TRONG MỖI MÔN: LÝ THUYẾT & ĐỀ BÀI TỰ LUYỆN
      **************************************************************************/
     function switchSectionTab(tabName) {
-      if (tabName === 'theory' && appState.activeExam) {
-        showToast('Đang trong chế độ luyện đề, không thể chuyển qua mục Lý thuyết!');
+      if (tabName === 'theory' && isExamInProgressLocked()) {
+        showToast('Đang làm bài thi! Chỉ được chuyển qua Lý thuyết sau khi ấn Nộp bài hoặc Quay trở về.');
         return;
       }
 
+      if (tabName === 'theory' && appState.activeExam && appState.isSubmitted) {
+        closeActiveExam();
+      }
+
       appState.activeTab = tabName;
+      updateTabButtonsVisual();
+      updateQuickAddButtonLabel();
+    }
+
+    function updateTabButtonsVisual() {
       const btnTheory = document.getElementById('tabBtn_theory');
       const btnExercise = document.getElementById('tabBtn_exercise');
       const viewTheory = document.getElementById('theoryTabView');
       const viewExercise = document.getElementById('exerciseTabView');
+      const locked = isExamInProgressLocked();
 
-      if (tabName === 'theory') {
+      if (appState.activeTab === 'theory') {
         btnTheory.className = 'px-4 py-2 text-sm font-semibold border border-neutral-900 bg-neutral-900 text-white rounded';
         btnExercise.className = 'px-4 py-2 text-sm font-semibold border border-neutral-300 bg-white text-neutral-700 hover:border-neutral-900 rounded';
         viewTheory.classList.remove('hidden');
         viewExercise.classList.add('hidden');
       } else {
         btnExercise.className = 'px-4 py-2 text-sm font-semibold border border-neutral-900 bg-neutral-900 text-white rounded';
-        btnTheory.className = 'px-4 py-2 text-sm font-semibold border border-neutral-300 bg-white text-neutral-700 hover:border-neutral-900 rounded' + (appState.activeExam ? ' opacity-50 cursor-not-allowed' : '');
+        btnTheory.className = 'px-4 py-2 text-sm font-semibold border border-neutral-300 bg-white text-neutral-700 rounded ' + (locked ? 'opacity-40 cursor-not-allowed' : 'hover:border-neutral-900');
         viewExercise.classList.remove('hidden');
         viewTheory.classList.add('hidden');
       }
-
-      updateQuickAddButtonLabel();
     }
 
     function updateTabCounts() {
@@ -1232,9 +1283,7 @@
               <h3 class="font-bold text-base text-neutral-900 cursor-pointer hover:underline" onclick="viewTheoryDetail('${doc.id}')">
                 ${escapeHtml(doc.title)}
               </h3>
-              <p class="text-xs text-neutral-600 line-clamp-2">
-                ${escapeHtml(snippet)}
-              </p>
+              <p class="text-xs text-neutral-600 line-clamp-2 whitespace-pre-wrap">${escapeHtml(snippet)}</p>
             </div>
 
             <div class="flex flex-wrap items-center gap-2 shrink-0">
@@ -1413,7 +1462,9 @@
       appState.selectedSubjectId = subjectId;
       await saveAllAppStateToDB();
       closeModal('theoryEditorModal');
-      switchSectionTab('theory');
+      if (!isExamInProgressLocked()) {
+        switchSectionTab('theory');
+      }
       renderEntireApp();
       showToast('Đã lưu bài lý thuyết.');
     }
@@ -1434,7 +1485,7 @@
     }
 
     /**************************************************************************
-     * 9. DANH SÁCH ĐỀ BÀI TỰ LUYỆN (CHIA THÀNH BÀI 1, BÀI 2...)
+     * 9. DANH SÁCH ĐỀ BÀI TỰ LUYỆN
      **************************************************************************/
     function renderExercisesList() {
       updateTabCounts();
@@ -1502,12 +1553,6 @@
       appState.expandedExplanations = {};
       initBlankStudentAnswers(appState.activeExam);
 
-      // Khóa giao diện nút tab Lý thuyết khi đang làm đề
-      const btnTheory = document.getElementById('tabBtn_theory');
-      if (btnTheory) {
-        btnTheory.classList.add('opacity-50', 'cursor-not-allowed');
-      }
-
       document.getElementById('activeExamLessonBadge').textContent = `Bài ${lessonNumber}`;
       document.getElementById('activeExamTitle').textContent = exam.title;
       document.getElementById('activeExamMeta').textContent = `${getSubjectName(exam.subjectId)} • ${exam.duration || 45} phút`;
@@ -1519,6 +1564,8 @@
       document.getElementById('exercisesListView').classList.add('hidden');
       document.getElementById('activeExamWorkspace').classList.remove('hidden');
 
+      updateTabButtonsVisual();
+      renderSubjectFilterPills();
       renderActiveExamQuestions();
       startExamTimer();
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1537,22 +1584,20 @@
         appState.studentAnswers.part2[idx] = { a: null, b: null, c: null, d: null };
       });
       (exam.part3 || []).forEach((_, idx) => {
-        appState.studentAnswers.part3[idx] = ['', '', '', '']; // Đúng 4 cột ngang
+        appState.studentAnswers.part3[idx] = ['', '', '', ''];
       });
     }
 
     function closeActiveExam() {
       stopExamTimer();
       appState.activeExam = null;
-
-      // Mở khóa lại nút tab Lý thuyết khi thoát khỏi đề luyện tập
-      const btnTheory = document.getElementById('tabBtn_theory');
-      if (btnTheory) {
-        btnTheory.classList.remove('opacity-50', 'cursor-not-allowed');
-      }
+      appState.isSubmitted = false;
 
       document.getElementById('activeExamWorkspace').classList.add('hidden');
       document.getElementById('exercisesListView').classList.remove('hidden');
+
+      updateTabButtonsVisual();
+      renderSubjectFilterPills();
     }
 
     function resetActiveExamAnswers() {
@@ -1563,6 +1608,8 @@
       document.getElementById('examResultSummaryBanner').classList.add('hidden');
       document.getElementById('btnSubmitExamTop').classList.remove('hidden');
       document.getElementById('btnSubmitExamBottom').classList.remove('hidden');
+      updateTabButtonsVisual();
+      renderSubjectFilterPills();
       renderActiveExamQuestions();
       startExamTimer();
       showToast('Đã xóa lựa chọn để làm lại.');
@@ -1597,7 +1644,7 @@
     }
 
     /**************************************************************************
-     * 10. RENDER 3 PHẦN TRẮC NGHIỆM & "PHIẾU TÔ" 4 CỘT CHUẨN
+     * 10. RENDER 3 PHẦN TRẮC NGHIỆM (HỖ TRỢ XUỐNG DÒNG WHITESPACE-PRE-WRAP)
      **************************************************************************/
     function renderActiveExamQuestions() {
       renderPart1Questions();
@@ -1642,14 +1689,14 @@
           return `
             <div
               onclick="selectPart1Option(${qIdx}, '${letter}')"
-              class="p-2.5 border ${isSelected ? 'border-neutral-900 bg-neutral-100/80' : 'border-neutral-200 hover:border-neutral-400'} rounded flex items-center gap-3 cursor-pointer select-none"
+              class="p-2.5 border ${isSelected ? 'border-neutral-900 bg-neutral-100/80' : 'border-neutral-200 hover:border-neutral-400'} rounded flex items-start gap-3 cursor-pointer select-none"
             >
               <button
                 type="button"
                 ${appState.isSubmitted ? 'disabled' : ''}
                 class="omr-bubble ${isSelected ? 'filled' : ''}"
               >${letter}</button>
-              <span class="text-sm text-neutral-900">${escapeHtml(q.options[letter] || '')}</span>
+              <span class="text-sm text-neutral-900 whitespace-pre-wrap pt-0.5">${escapeHtml(q.options[letter] || '')}</span>
             </div>
           `;
         }).join('');
@@ -1657,9 +1704,9 @@
         return `
           <div class="p-4 border ${cardBorderClass} rounded space-y-3">
             <div class="flex flex-wrap items-start justify-between gap-2">
-              <div class="text-sm sm:text-base font-medium text-neutral-900">
+              <div class="text-sm sm:text-base font-medium text-neutral-900 flex-1">
                 <span class="font-bold font-mono mr-1">Câu ${qIdx + 1}.</span>
-                <span>${escapeHtml(q.question)}</span>
+                <span class="whitespace-pre-wrap">${escapeHtml(q.question)}</span>
               </div>
               ${statusBadge}
             </div>
@@ -1758,7 +1805,7 @@
             <tr class="${rowBg}">
               <td class="px-3 py-2.5 text-sm text-neutral-900 border-t border-neutral-200">
                 <span class="font-mono font-bold mr-1.5">${key})</span>
-                <span>${escapeHtml(q.statements[key] || '')}</span>
+                <span class="whitespace-pre-wrap">${escapeHtml(q.statements[key] || '')}</span>
               </td>
               <td class="px-3 py-2.5 text-center border-t border-l border-neutral-200 w-20">
                 <button
@@ -1784,9 +1831,9 @@
         return `
           <div class="p-4 border ${wrapperClass} rounded space-y-3">
             <div class="flex flex-wrap items-start justify-between gap-2">
-              <div class="text-sm sm:text-base font-medium text-neutral-900">
+              <div class="text-sm sm:text-base font-medium text-neutral-900 flex-1">
                 <span class="font-bold font-mono mr-1">Câu ${qIdx + 1}.</span>
-                <span>${escapeHtml(q.question)}</span>
+                <span class="whitespace-pre-wrap">${escapeHtml(q.question)}</span>
               </div>
               ${headerBadge}
             </div>
@@ -1864,12 +1911,10 @@
       return sStr === cStr;
     }
 
-    // Dựng giao diện "Phiếu tô" 4 cột với nhãn Dấu (-) và Dấu (,) nằm gọn trên 1 dòng ngang duy nhất
     function buildStudentOMRGrid4Columns(qIdx, colsData, isDisabled) {
-      const columns = [0, 1, 2, 3]; // 4 cột ngang: Cột 1, Cột 2, Cột 3, Cột 4
+      const columns = [0, 1, 2, 3];
       const safeCols = normalize4ColumnsArray(colsData);
 
-      // Hàng 4 ô vuông hiển thị ký tự đã tô trên đỉnh mỗi cột
       const topSquaresHtml = columns.map(cIdx => {
         const charVal = safeCols[cIdx] || '';
         return `
@@ -1880,7 +1925,6 @@
         `;
       }).join('');
 
-      // Hàng Dấu (-): Chỉ có ô tròn ở cột 1 (cIdx === 0)
       const minusRowCells = columns.map(cIdx => {
         if (cIdx === 0) {
           const filled = safeCols[cIdx] === '-';
@@ -1899,7 +1943,6 @@
         return `<td class="px-1.5 py-1 text-center"><span class="inline-block w-1.5 h-1.5 rounded-full bg-neutral-200 align-middle"></span></td>`;
       }).join('');
 
-      // Hàng Dấu (,): Có ô tròn ở cột 2 và cột 3 (cIdx === 1 || cIdx === 2)
       const commaRowCells = columns.map(cIdx => {
         if (cIdx === 1 || cIdx === 2) {
           const filled = safeCols[cIdx] === ',';
@@ -1918,7 +1961,6 @@
         return `<td class="px-1.5 py-1 text-center"><span class="inline-block w-1.5 h-1.5 rounded-full bg-neutral-200 align-middle"></span></td>`;
       }).join('');
 
-      // 10 hàng chữ số từ 0 đến 9: Có đầy đủ ở cả 4 cột
       const digitsRowsHtml = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].map(digit => {
         const cells = columns.map(cIdx => {
           const filled = safeCols[cIdx] === digit;
@@ -1947,7 +1989,6 @@
 
       return `
         <div class="inline-block border-2 border-neutral-900 bg-white p-3.5 rounded">
-          <!-- Tiêu đề ngắn gọn: "Phiếu tô" kèm nút "Xóa tô lại" -->
           <div class="flex items-center justify-between border-b border-neutral-300 pb-2 mb-2.5 gap-4">
             <span class="text-xs font-mono font-bold uppercase text-neutral-900 whitespace-nowrap">
               Phiếu tô
@@ -1973,21 +2014,18 @@
               </tr>
             </thead>
             <tbody>
-              <!-- Hàng Dấu (-) trên 1 dòng duy nhất -->
               <tr>
                 <td class="pr-3 py-1 text-right font-mono text-xs font-semibold text-neutral-800 whitespace-nowrap select-none">
                   Dấu (-)
                 </td>
                 ${minusRowCells}
               </tr>
-              <!-- Hàng Dấu (,) trên 1 dòng duy nhất -->
               <tr class="border-t border-neutral-100">
                 <td class="pr-3 py-1 text-right font-mono text-xs font-semibold text-neutral-800 whitespace-nowrap select-none">
                   Dấu (,)
                 </td>
                 ${commaRowCells}
               </tr>
-              <!-- 10 hàng số 0 -> 9 -->
               ${digitsRowsHtml}
             </tbody>
           </table>
@@ -2036,7 +2074,7 @@
             <div class="flex flex-wrap items-start justify-between gap-2">
               <div class="text-sm sm:text-base font-medium text-neutral-900 flex-1">
                 <span class="font-bold font-mono mr-1">Câu ${qIdx + 1}.</span>
-                <span>${escapeHtml(q.question)}</span>
+                <span class="whitespace-pre-wrap">${escapeHtml(q.question)}</span>
               </div>
               ${statusBadge}
             </div>
@@ -2141,13 +2179,15 @@
       document.getElementById('btnSubmitExamTop').classList.add('hidden');
       document.getElementById('btnSubmitExamBottom').classList.add('hidden');
 
+      updateTabButtonsVisual();
+      renderSubjectFilterPills();
       renderActiveExamQuestions();
       window.scrollTo({ top: 0, behavior: 'smooth' });
       showToast('Đã chấm điểm! Bạn có thể bấm "Xem giải thích" ở từng câu.');
     }
 
     /**************************************************************************
-     * 12. TRÌNH TẠO / SỬA BÀI TẬP TỰ LUYỆN (4 CỘT Ở PHẦN III)
+     * 12. TRÌNH TẠO / SỬA BÀI TẬP TỰ LUYỆN (TẤT CẢ Ô ĐỀU NHẤN ENTER XUỐNG DÒNG ĐƯỢC)
      **************************************************************************/
     function parseStringTo4Columns(str) {
       const cleaned = String(str || '').trim().replace(/\./g, ',');
@@ -2227,24 +2267,22 @@
             <span class="font-mono text-xs font-bold">Phần I - Câu ${idx + 1}</span>
             <button onclick="removeEditorQuestion('part1', ${idx})" class="text-xs text-neutral-500 hover:text-neutral-900 underline">Xóa câu</button>
           </div>
-          <input
-            type="text"
-            value="${escapeHtml(q.question)}"
+          <textarea
+            rows="2"
             oninput="appState.editorDraft.part1[${idx}].question = this.value"
-            placeholder="Nội dung câu hỏi..."
+            placeholder="Nội dung câu hỏi (Nhấn Enter để xuống dòng)..."
             class="w-full px-3 py-1.5 text-sm border border-neutral-300 rounded bg-white"
-          />
+          >${escapeHtml(q.question)}</textarea>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
             ${['A', 'B', 'C', 'D'].map(opt => `
-              <div class="flex items-center gap-2">
-                <span class="font-mono text-xs font-bold w-5">${opt}.</span>
-                <input
-                  type="text"
-                  value="${escapeHtml(q.options[opt] || '')}"
+              <div class="flex items-start gap-2">
+                <span class="font-mono text-xs font-bold w-5 pt-1.5">${opt}.</span>
+                <textarea
+                  rows="1"
                   oninput="appState.editorDraft.part1[${idx}].options['${opt}'] = this.value"
                   placeholder="Phương án ${opt}"
                   class="flex-1 px-2.5 py-1 text-xs border border-neutral-300 rounded bg-white"
-                />
+                >${escapeHtml(q.options[opt] || '')}</textarea>
               </div>
             `).join('')}
           </div>
@@ -2259,14 +2297,13 @@
               </select>
             </div>
             <div class="sm:col-span-2">
-              <label class="block text-[11px] font-mono text-neutral-600 mb-0.5">Giải thích chi tiết:</label>
-              <input
-                type="text"
-                value="${escapeHtml(q.explanation || '')}"
+              <label class="block text-[11px] font-mono text-neutral-600 mb-0.5">Giải thích chi tiết (Nhấn Enter để xuống dòng):</label>
+              <textarea
+                rows="2"
                 oninput="appState.editorDraft.part1[${idx}].explanation = this.value"
                 placeholder="Nội dung giải thích..."
                 class="w-full px-2.5 py-1.5 text-xs border border-neutral-300 rounded bg-white"
-              />
+              >${escapeHtml(q.explanation || '')}</textarea>
             </div>
           </div>
         </div>
@@ -2296,24 +2333,22 @@
             <span class="font-mono text-xs font-bold">Phần II - Câu ${idx + 1}</span>
             <button onclick="removeEditorQuestion('part2', ${idx})" class="text-xs text-neutral-500 hover:text-neutral-900 underline">Xóa câu</button>
           </div>
-          <input
-            type="text"
-            value="${escapeHtml(q.question)}"
+          <textarea
+            rows="2"
             oninput="appState.editorDraft.part2[${idx}].question = this.value"
-            placeholder="Nội dung câu dẫn Phần II..."
+            placeholder="Nội dung câu dẫn Phần II (Nhấn Enter để xuống dòng)..."
             class="w-full px-3 py-1.5 text-sm border border-neutral-300 rounded bg-white"
-          />
+          >${escapeHtml(q.question)}</textarea>
           <div class="space-y-2">
             ${['a', 'b', 'c', 'd'].map(k => `
-              <div class="flex flex-col sm:flex-row sm:items-center gap-2 bg-white p-2 border border-neutral-200 rounded">
-                <span class="font-mono text-xs font-bold w-6">${k})</span>
-                <input
-                  type="text"
-                  value="${escapeHtml(q.statements[k] || '')}"
+              <div class="flex flex-col sm:flex-row sm:items-start gap-2 bg-white p-2 border border-neutral-200 rounded">
+                <span class="font-mono text-xs font-bold w-6 pt-1">${k})</span>
+                <textarea
+                  rows="1"
                   oninput="appState.editorDraft.part2[${idx}].statements['${k}'] = this.value"
                   placeholder="Mệnh đề ${k}..."
                   class="flex-1 px-2.5 py-1 text-xs border border-neutral-300 rounded"
-                />
+                >${escapeHtml(q.statements[k] || '')}</textarea>
                 <div class="flex items-center gap-1.5 shrink-0 font-mono text-xs">
                   <button
                     type="button"
@@ -2330,7 +2365,7 @@
             `).join('')}
           </div>
           <div>
-            <label class="block text-[11px] font-mono text-neutral-600 mb-0.5">Giải thích chi tiết:</label>
+            <label class="block text-[11px] font-mono text-neutral-600 mb-0.5">Giải thích chi tiết (Nhấn Enter để xuống dòng):</label>
             <textarea
               rows="2"
               oninput="appState.editorDraft.part2[${idx}].explanation = this.value"
@@ -2393,13 +2428,12 @@
               <span class="font-mono text-xs font-bold">Phần III (Phiếu tô 4 cột) - Câu ${idx + 1}</span>
               <button onclick="removeEditorQuestion('part3', ${idx})" class="text-xs text-neutral-500 hover:text-neutral-900 underline">Xóa câu</button>
             </div>
-            <input
-              type="text"
-              value="${escapeHtml(q.question)}"
+            <textarea
+              rows="2"
               oninput="appState.editorDraft.part3[${idx}].question = this.value"
-              placeholder="Nội dung câu hỏi trả lời ngắn..."
+              placeholder="Nội dung câu hỏi trả lời ngắn (Nhấn Enter để xuống dòng)..."
               class="w-full px-3 py-1.5 text-sm border border-neutral-300 rounded bg-white"
-            />
+            >${escapeHtml(q.question)}</textarea>
 
             <div class="p-3 bg-white border border-neutral-300 rounded flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div class="space-y-1">
@@ -2421,14 +2455,13 @@
             </div>
 
             <div>
-              <label class="block text-[11px] font-mono text-neutral-600 mb-0.5">Giải thích chi tiết:</label>
-              <input
-                type="text"
-                value="${escapeHtml(q.explanation || '')}"
+              <label class="block text-[11px] font-mono text-neutral-600 mb-0.5">Giải thích chi tiết (Nhấn Enter để xuống dòng):</label>
+              <textarea
+                rows="2"
                 oninput="appState.editorDraft.part3[${idx}].explanation = this.value"
                 placeholder="Hướng dẫn giải chi tiết..."
                 class="w-full px-2.5 py-1.5 text-xs border border-neutral-300 rounded bg-white"
-              />
+              >${escapeHtml(q.explanation || '')}</textarea>
             </div>
           </div>
         `;
@@ -2496,8 +2529,8 @@
       appState.selectedSubjectId = subjectId;
       await saveAllAppStateToDB();
       closeModal('examCreatorModal');
-      switchSectionTab('exercise');
       closeActiveExam();
+      switchSectionTab('exercise');
       renderEntireApp();
       showToast('Đã lưu bài tự luyện.');
     }
@@ -2518,8 +2551,46 @@
     }
 
     /**************************************************************************
-     * 13. XUẤT / NHẬP DỮ LIỆU JSON
+     * 13. ĐÓNG GÓI FILE INDEX.HTML (KÈM DỮ LIỆU) & XUẤT/NHẬP JSON
      **************************************************************************/
+    function exportStandaloneHTML() {
+      // Tạm đóng chế độ Quản trị viên trên giao diện trước khi chụp mã HTML để học sinh mở lên ở chế độ Học sinh
+      const prevManager = appState.isManager;
+      appState.isManager = false;
+      updateManagerUI();
+
+      const embeddedPayload = {
+        exportedAt: Date.now(),
+        subjects: appState.subjects,
+        documents: appState.documents,
+        exams: appState.exams
+      };
+
+      let fullHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      const replacementBlock =
+        '/*__EMBEDDED_DATA_START__*/\n    const EMBEDDED_SHARED_DATA = ' +
+        JSON.stringify(embeddedPayload) +
+        ';\n    /*__EMBEDDED_DATA_END__*/';
+
+      fullHtml = fullHtml.replace(
+        /\/\*__EMBEDDED_DATA_START__\*\/[\s\S]*?\/\*__EMBEDDED_DATA_END__\*\//,
+        replacementBlock
+      );
+
+      // Khôi phục lại chế độ Quản trị viên cho người dùng
+      appState.isManager = prevManager;
+      updateManagerUI();
+
+      const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'index.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      showToast('Đã tải xuống file index.html chứa toàn bộ dữ liệu!');
+    }
+
     function exportAllDataJSON() {
       const backupPayload = {
         exportedAt: new Date().toISOString(),
